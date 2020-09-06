@@ -7,6 +7,7 @@ interface ITheme {
     background_primary: string;
     background_secondary: string;
     background_active: string;
+    background_alternative: string;
     text_primary: string;
     text_secondary: string;
     primary: string;
@@ -26,8 +27,9 @@ export const theme: ITheme = {
     background_primary: "#E2E1E0",
     background_secondary: "#fafafa",
     background_active: "#437DDB",
-    text_primary: "#020300",
-    text_secondary: "#898380",
+    background_alternative: "#D7D6D5",
+    text_primary: "#292929",
+    text_secondary: "#756F6C",
     primary: "#74C2E1",
     secondary: "#B5DCEC",
   },

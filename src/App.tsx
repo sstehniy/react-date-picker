@@ -4,7 +4,7 @@ import DatePicker from "./components/DatePicker";
 
 const StyledApp = styled.div`
   min-height: 100vh;
-  background-color: ${({ theme }) => theme.color.background_secondary};
+  background-color: #c8e1f9;
   display: flex;
   align-items: center;
   justify-content: center;

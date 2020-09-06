@@ -13,6 +13,7 @@ const GlobalStyle = createGlobalStyle`
 
   html{
     font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { getFormattedDate } from "../../util/getFormattedDate";
 import { DateData } from "./typeDefs";
-import DateContext from "./context";
 import DateInput from "./DateInput";
 import DateCalendar from "./DateCalendar";
 
@@ -12,15 +11,13 @@ const DatePickerWrapper = styled.div`
 
 const defaultDate = new Date();
 
-const { Provider } = DateContext;
-
 const DatePicker: React.FC = () => {
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [selecetedDate, setSelectedDate] = useState<DateData>({
+  const [showCalendar, setShowCalendar] = useState(true);
+  const [selectedDate, setSelectedDate] = useState<DateData>({
     fromDate: {
-      day: getFormattedDate(defaultDate.getDay()),
-      month: getFormattedDate(defaultDate.getMonth() + 1),
-      year: defaultDate.getFullYear().toString(),
+      day: getFormattedDate(defaultDate.getUTCDate()),
+      month: getFormattedDate(defaultDate.getUTCMonth() + 1),
+      year: defaultDate.getUTCFullYear().toString(),
     },
   });
 
@@ -31,18 +28,25 @@ const DatePicker: React.FC = () => {
   const discardSelectedDate = () => {
     setSelectedDate({
       fromDate: {
-        day: getFormattedDate(defaultDate.getDay()),
-        month: getFormattedDate(defaultDate.getMonth() + 1),
-        year: getFormattedDate(defaultDate.getFullYear()),
+        day: getFormattedDate(defaultDate.getUTCDate()),
+        month: getFormattedDate(defaultDate.getUTCMonth() + 1),
+        year: getFormattedDate(defaultDate.getUTCFullYear()),
       },
     });
   };
 
   const selectDate = (day: number, month: number, year: number) => {
+    /**
+     * - if both form/to dates are chosen
+     * - if the chosen date is earlier then selected from date
+     * - if no dates are already selected
+     */
     if (
-      (selecetedDate.fromDate && selecetedDate.toDate) ||
-      (selecetedDate.fromDate && +selecetedDate.fromDate.month > month) ||
-      (!selecetedDate.fromDate && !selecetedDate.toDate)
+      (selectedDate.fromDate && selectedDate.toDate) ||
+      (selectedDate.fromDate &&
+        +selectedDate.fromDate.month > month &&
+        +selectedDate.fromDate.year >= year) ||
+      (!selectedDate.fromDate && !selectedDate.toDate)
     ) {
       setSelectedDate({
         fromDate: {
@@ -52,14 +56,17 @@ const DatePicker: React.FC = () => {
         },
       });
     }
+    /**
+     * if from date is selected and selected to date is sooner then selected from date
+     */
     if (
-      selecetedDate.fromDate &&
-      year >= +selecetedDate.fromDate.year &&
-      month >= +selecetedDate.fromDate.month &&
-      day > +selecetedDate.fromDate.day
+      selectedDate.fromDate &&
+      year >= +selectedDate.fromDate.year &&
+      month >= +selectedDate.fromDate.month &&
+      day > +selectedDate.fromDate.day
     ) {
       setSelectedDate({
-        ...selecetedDate,
+        ...selectedDate,
         toDate: {
           day: getFormattedDate(day),
           month: getFormattedDate(month),
@@ -70,19 +77,17 @@ const DatePicker: React.FC = () => {
   };
 
   return (
-    <Provider
-      value={{
-        date: selecetedDate,
-        toggleDatePicker,
-        discardSelectedDate,
-        selectDate,
-      }}
-    >
-      <DatePickerWrapper>
-        <DateInput date={selecetedDate} onClick={toggleDatePicker} />
-        <DateCalendar date={selecetedDate} />
-      </DatePickerWrapper>
-    </Provider>
+    <DatePickerWrapper>
+      <DateInput date={selectedDate} onClick={toggleDatePicker} />
+      {showCalendar && (
+        <DateCalendar
+          date={selectedDate}
+          selectDate={selectDate}
+          discardSelectedDate={discardSelectedDate}
+          toggleDatePicker={toggleDatePicker}
+        />
+      )}
+    </DatePickerWrapper>
   );
 };
 

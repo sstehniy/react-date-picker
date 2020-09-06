@@ -14,6 +14,7 @@ const StyledDateInput = styled.div`
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.shadow.xl};
   transition: border-color 0.15s ease-in-out, box-shadow 0.1s ease-in-out;
+  outline: none;
 
   & input {
     background-color: white;
@@ -72,7 +73,7 @@ const DateInput: React.FC<DateInputProps> = ({
   }, [fromDate, toDate]);
 
   return (
-    <StyledDateInput onClick={onClick}>
+    <StyledDateInput onClick={onClick} tabIndex={1}>
       <input type="text" value={formattedDate} readOnly={true} />
       <div className="calendar-icon">
         <CalenderIcon
