@@ -17,7 +17,7 @@ const DatePicker: React.FC = () => {
     fromDate: {
       day: getFormattedDate(defaultDate.getUTCDate()),
       month: getFormattedDate(defaultDate.getUTCMonth() + 1),
-      year: defaultDate.getUTCFullYear().toString(),
+      year: defaultDate.getFullYear().toString(),
     },
   });
 
@@ -30,7 +30,7 @@ const DatePicker: React.FC = () => {
       fromDate: {
         day: getFormattedDate(defaultDate.getUTCDate()),
         month: getFormattedDate(defaultDate.getUTCMonth() + 1),
-        year: getFormattedDate(defaultDate.getUTCFullYear()),
+        year: getFormattedDate(defaultDate.getFullYear()),
       },
     });
   };
