@@ -11,6 +11,7 @@ type DateInputProps = {
 const StyledDateInput = styled.div`
   position: relative;
   border-radius: 10px;
+  max-width: 300px;
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.shadow.xl};
   transition: border-color 0.15s ease-in-out, box-shadow 0.1s ease-in-out;
@@ -23,8 +24,8 @@ const StyledDateInput = styled.div`
     height: 35px;
     padding: 7px 50px 7px 15px;
     text-align: center;
-    font-size: 1.3rem;
-    letter-spacing: 1.5px;
+    font-size: 1rem;
+    letter-spacing: 1px;
     outline: none;
     cursor: pointer;
   }

@@ -36,8 +36,7 @@ type DateCalenderProps = {
 
 const CalendarWrapper = styled.div`
   position: absolute;
-  height: 375px;
-  width: 100%;
+  width: 300px;
   top: 50%;
   transform: translateY(-50%);
   border-radius: 15px;
@@ -109,6 +108,7 @@ const StyledCalendarHead = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 15px;
+  user-select: none;
   box-shadow: ${({ theme }) => theme.shadow.lg};
 
   & * {
@@ -146,7 +146,7 @@ const CalendarHead = () => {
 
   const monthYearToDisplay = useMemo(() => {
     const monthNumber = +month;
-    return `${months[monthNumber - 1]}, ${year}`;
+    return `${months[monthNumber - 1]} ${year}`;
   }, [month, year]);
 
   return (
@@ -170,7 +170,7 @@ const CalendarHead = () => {
 
 /* ------------------------------------- */
 const StyledCalendarBody = styled.div`
-  height: 285px;
+  height: 330px;
   padding: 10px 15px;
   background-color: transparent;
   display: flex;
@@ -178,28 +178,30 @@ const StyledCalendarBody = styled.div`
 `;
 
 const BodyHead = styled.div`
-  height: 35px;
-  padding: 0 7px;
-  font-size: 1.1rem;
+  height: 25px;
+  padding: 0 8px 0 0;
+  font-size: 1rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  user-select: none;
 
-  & > span:not(:first-child) {
+  /* & > span:not(:first-child) {
     margin-left: 13px;
   }
 
   & > span:last-child {
     margin-left: 20px;
-  }
+  } */
 `;
 
 const BodyMain = styled.div`
-  flex: 1;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  place-items: center;
   justify-items: center;
-  align-items: center;
-  font-size: 1.1rem;
+
+  font-size: 1.2rem;
 `;
 
 type DateData = {
@@ -323,6 +325,26 @@ const CalendarBody = () => {
           return day < to.day;
         }
       }
+    } else if (from.year < to.year) {
+      if (year > from.year && year < to.year) {
+        return true;
+      }
+      if (year === from.year) {
+        if (month === from.month) {
+          return day > from.day;
+        }
+        if (month > from.month) {
+          return true;
+        }
+      }
+      if (year === to.year) {
+        if (month === to.month) {
+          return day < to.day;
+        }
+        if (month < to.month) {
+          return true;
+        }
+      }
     }
     return false;
   };
@@ -387,23 +409,34 @@ const StyledDateComponent = styled.span<StyledProps>`
   position: relative;
   height: 30px;
   width: 30px;
+  margin-top: 10px;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
-  font-size: 0.9rem;
+
+  font-size: 1rem;
   user-select: none;
   color: ${({ theme, active, subActive, disabled }) => {
-    if (disabled) return "transparent";
+    if (disabled) return theme.color.background_primary;
     if (active) return theme.color.background_secondary;
     if (subActive) return theme.color.text_secondary;
   }};
   ${({ active }) =>
     active &&
     css`
-      background-color: ${({ theme: { color } }) => color.btn_primary};
-      box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
+      &:before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: -1px;
+        bottom: -3px;
+        left: -2px;
+        right: -2px;
+        border-radius: 50%;
+        background-color: ${({ theme: { color } }) => color.btn_primary};
+        box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
+      }
     `}
   ${({ subActive, disabled }) =>
     !!(subActive && !disabled) &&
@@ -411,10 +444,10 @@ const StyledDateComponent = styled.span<StyledProps>`
       &:after {
         content: "";
         position: absolute;
-        z-index: -1;
-        top: 50%;
+        z-index: -2;
+        top: 55%;
         transform: translateY(-50%);
-        width: 43px;
+        width: 129%;
         height: 23px;
         background-color: ${({ theme: { color } }) => color.select_secondary};
         opacity: 0.5;
@@ -427,11 +460,11 @@ const StyledDateComponent = styled.span<StyledProps>`
       &:after {
         content: "";
         position: absolute;
-        z-index: -1;
-        top: 50%;
+        z-index: -2;
+        top: 55%;
         right: 50%;
         transform: translateY(-50%);
-        width: 21.5px;
+        width: 64%;
         height: 23px;
         background-color: ${({ theme: { color } }) => color.select_secondary};
         opacity: 0.5;
@@ -444,11 +477,11 @@ const StyledDateComponent = styled.span<StyledProps>`
       &:after {
         content: "";
         position: absolute;
-        z-index: -1;
-        top: 50%;
+        z-index: -2;
+        top: 55%;
         left: 50%;
         transform: translateY(-50%);
-        width: 21.5px;
+        width: 64%;
         height: 23px;
         background-color: ${({ theme: { color } }) => color.select_secondary};
         opacity: 0.5;

@@ -82,9 +82,10 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
      */
     if (
       selectedDate.fromDate &&
-      year >= +selectedDate.fromDate.year &&
-      month >= +selectedDate.fromDate.month &&
-      day > +selectedDate.fromDate.day
+      ((year === +selectedDate.fromDate.year &&
+        month >= +selectedDate.fromDate.month &&
+        day > +selectedDate.fromDate.day) ||
+        year > +selectedDate.fromDate.year)
     ) {
       setSelectedDate({
         ...selectedDate,

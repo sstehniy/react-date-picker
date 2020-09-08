@@ -5,6 +5,9 @@ type CustomButtonProps = {
   primary?: boolean;
   secondary?: boolean;
   danger?: boolean;
+  small?: boolean;
+  normal?: boolean;
+  large?: boolean;
 };
 
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & CustomButtonProps;
@@ -21,10 +24,10 @@ const StyledButton = styled.button<CustomButtonProps>`
   border-radius: 5px;
   font-weight: 700;
   letter-spacing: 1px;
+  flex: 0 0 0;
   box-shadow: ${({ theme }) => theme.shadow.button};
   cursor: pointer;
   color: ${({ theme }) => theme.color.text_primary};
-  transition: filter 0.1s ease;
   &:hover {
     filter: brightness(0.9);
   }
