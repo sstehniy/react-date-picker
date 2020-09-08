@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { SelectedDateData } from "../typeDefs";
-import { MonthChanhgeType } from "../DateCalendar";
+import { MonthChanhgeType } from "../DateCalendar/index";
 
 type ContextType = {
   date: SelectedDateData;

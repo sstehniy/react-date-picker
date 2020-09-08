@@ -13,34 +13,77 @@ type CustomButtonProps = {
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & CustomButtonProps;
 
 const StyledButton = styled.button<CustomButtonProps>`
-  height: 100%;
-  max-height: 35px;
-  padding: 3px 10px;
   margin: 0 5px;
-  font-size: 0.8rem;
   text-transform: uppercase;
   border: none;
   outline: none;
-  border-radius: 5px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  flex: 0 0 0;
-  box-shadow: ${({ theme }) => theme.shadow.button};
   cursor: pointer;
   color: ${({ theme }) => theme.color.text_primary};
-  &:hover {
-    filter: brightness(0.9);
-  }
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
 
-  &.onClick {
-    animation: clickAnimation 0.15s forwards ease-in-out;
-  }
+  ${({ small }) => {
+    return (
+      small &&
+      css`
+        padding: 5px 7px;
+        font-size: 0.64rem;
+        font-weight: 500;
+        border-radius: 0.35em;
+        letter-spacing: 1px;
+        box-shadow: ${({ theme }) => theme.shadow.button_sm};
+
+        &:hover {
+          box-shadow: ${({ theme }) => theme.shadow.button_hover};
+        }
+      `
+    );
+  }};
+
+  ${({ normal }) => {
+    return (
+      normal &&
+      css`
+        padding: 6px 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border-radius: 0.35em;
+        letter-spacing: 1px;
+        box-shadow: ${({ theme }) => theme.shadow.button_md};
+
+        &:hover {
+          box-shadow: ${({ theme }) => theme.shadow.button_hover};
+        }
+      `
+    );
+  }};
+
+  ${({ large }) => {
+    return (
+      large &&
+      css`
+        padding: 7px 10px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: 0.35em;
+        letter-spacing: 1.5px;
+        box-shadow: ${({ theme }) => theme.shadow.button_lg};
+
+        &:hover {
+          box-shadow: ${({ theme }) => theme.shadow.button_hover};
+        }
+      `
+    );
+  }};
 
   ${({ primary }) => {
     return (
       primary &&
       css`
         background-color: ${({ theme }) => theme.color.btn_primary};
+
+        &:hover {
+          background-color: ${({ theme }) => theme.color.btn_primary_hover};
+        }
       `
     );
   }}
@@ -50,6 +93,10 @@ const StyledButton = styled.button<CustomButtonProps>`
       danger &&
       css`
         background-color: ${({ theme }) => theme.color.btn_danger};
+
+        &:hover {
+          background-color: ${({ theme }) => theme.color.btn_danger_hover};
+        }
       `
     );
   }}
@@ -58,45 +105,18 @@ ${({ secondary }) => {
     return (
       secondary &&
       css`
-        background-color: ${({ theme }) => theme.color.text_secondary};
+        background-color: ${({ theme }) => theme.color.btn_secondary};
+
+        &:hover {
+          background-color: ${({ theme }) => theme.color.btn_secondary_hover};
+        }
       `
     );
   }}
-
-  @keyframes clickAnimation {
-    0% {
-      transform: scale(1);
-      box-shadow: ${({ theme }) => theme.shadow.button};
-    }
-    50% {
-      transform: scale(0.96);
-      box-shadow: ${({ theme }) => theme.shadow.sm};
-    }
-    100% {
-      transform: scale(1);
-      box-shadow: ${({ theme }) => theme.shadow.button};
-    }
-  }
 `;
 
 const Button = ({ ...props }: ButtonProps) => {
-  const btnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!btnRef.current) return;
-    const handleClick = () => {
-      btnRef.current?.classList.remove("onClick");
-      setImmediate(() => {
-        btnRef.current?.classList.add("onClick");
-      });
-    };
-    btnRef.current.addEventListener("click", handleClick);
-    return () => {
-      btnRef.current?.removeEventListener("click", handleClick);
-    };
-  }, [btnRef]);
-
-  return <StyledButton {...props} ref={btnRef} />;
+  return <StyledButton {...props} />;
 };
 
 export default Button;

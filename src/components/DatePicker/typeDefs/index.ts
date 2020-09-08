@@ -13,3 +13,11 @@ export type DateScalars = {
   month: string;
   year: string;
 };
+
+export type DateData = {
+  date: number;
+  day: number;
+  month: number;
+  year: number;
+  disabled: boolean;
+};

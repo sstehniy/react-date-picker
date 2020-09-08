@@ -26,8 +26,10 @@ interface ITheme {
     xl: string;
     xxl: string;
     md_invert: string;
-    button: string;
     button_sm: string;
+    button_md: string;
+    button_lg: string;
+    button_hover: string;
   };
 }
 
@@ -45,8 +47,8 @@ export const theme: ITheme = {
     btn_primary_hover: "#2261AA",
     btn_danger: "#E60451",
     btn_danger_hover: "#C90345",
-    btn_secondary: "#E0E0E0",
-    btn_secondary_hover: "#CCCCCC",
+    btn_secondary: "#898380",
+    btn_secondary_hover: "#756F6C",
   },
   shadow: {
     sm: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.06)",
@@ -58,8 +60,12 @@ export const theme: ITheme = {
     xxl: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
     md_invert:
       "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-    button: "0px 5px 17px 0 rgba(0, 0, 0, 0.4)",
     button_sm:
       "0 1px 5px 0 rgba(0, 0, 0, 0.4), 0 1px 5px 0 rgba(0, 0, 0, 0.06)",
+    button_md:
+      "0 2px 6px 0 rgba(0, 0, 0, 0.4), 0 2px 6px 0 rgba(0, 0, 0, 0.06)",
+    button_lg:
+      "0 3px 8px 0 rgba(0, 0, 0, 0.4), 0 3px 8px 0 rgba(0, 0, 0, 0.06) ",
+    button_hover: "0 0.05em 0.3em rgba(0,0,0,0.5)",
   },
 };

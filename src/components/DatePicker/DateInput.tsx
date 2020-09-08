@@ -11,6 +11,7 @@ type DateInputProps = {
 const StyledDateInput = styled.div`
   position: relative;
   border-radius: 10px;
+  min-width: 200px;
   max-width: 300px;
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.shadow.xl};
