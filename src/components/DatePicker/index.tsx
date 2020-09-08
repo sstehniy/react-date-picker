@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getFormattedDate } from "../../util/getFormattedDate";
-import { DateData } from "./typeDefs";
+import { SelectedDateData } from "./typeDefs";
 import DateInput from "./DateInput";
 import DateCalendar from "./DateCalendar";
+
+type DatePickerProps = {
+  getDate: (date: SelectedDateData) => void;
+};
 
 const DatePickerWrapper = styled.div`
   position: relative;
@@ -11,15 +15,24 @@ const DatePickerWrapper = styled.div`
 
 const defaultDate = new Date();
 
-const DatePicker: React.FC = () => {
+const DatePicker = ({ getDate }: DatePickerProps) => {
   const [showCalendar, setShowCalendar] = useState(true);
-  const [selectedDate, setSelectedDate] = useState<DateData>({
+  const [selectedDate, setSelectedDate] = useState<SelectedDateData>({
     fromDate: {
       day: getFormattedDate(defaultDate.getUTCDate()),
       month: getFormattedDate(defaultDate.getUTCMonth() + 1),
       year: defaultDate.getFullYear().toString(),
     },
+    toDate: {
+      day: getFormattedDate(defaultDate.getUTCDate() + 22),
+      month: getFormattedDate(defaultDate.getUTCMonth() + 1),
+      year: defaultDate.getFullYear().toString(),
+    },
   });
+
+  useEffect(() => {
+    getDate(selectedDate);
+  }, [selectedDate.fromDate, selectedDate.toDate, getDate, selectedDate]);
 
   const toggleDatePicker = () => {
     setShowCalendar(!showCalendar);
@@ -36,6 +49,14 @@ const DatePicker: React.FC = () => {
   };
 
   const selectDate = (day: number, month: number, year: number) => {
+    if (
+      selectedDate.fromDate &&
+      +selectedDate.fromDate.day === day &&
+      +selectedDate.fromDate.month === month &&
+      +selectedDate.fromDate.year === year
+    ) {
+      setSelectedDate({});
+    }
     /**
      * - if both form/to dates are chosen
      * - if the chosen date is earlier then selected from date

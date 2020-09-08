@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
-import { DateData } from "./typeDefs";
+import { SelectedDateData } from "./typeDefs";
 import { ReactComponent as CalenderIcon } from "../../assets/calendar.svg";
 
 type DateInputProps = {
-  date: DateData;
+  date: SelectedDateData;
   onClick: () => void;
 };
 
@@ -58,12 +58,16 @@ const StyledDateInput = styled.div`
   }
 `;
 
+const defaultDate = new Date();
+
 const DateInput: React.FC<DateInputProps> = ({
   date: { fromDate, toDate },
   onClick,
 }) => {
   const formattedDate = useMemo(() => {
-    let dateString;
+    let dateString = `0${defaultDate.getUTCDate()}.0${
+      defaultDate.getUTCMonth() + 1
+    }.${defaultDate.getFullYear()}`;
     if (fromDate)
       dateString = `${fromDate.day}.${fromDate.month}.${fromDate.year}`;
     if (toDate) {
@@ -74,7 +78,12 @@ const DateInput: React.FC<DateInputProps> = ({
 
   return (
     <StyledDateInput onClick={onClick} tabIndex={1}>
-      <input type="text" value={formattedDate} readOnly={true} />
+      <input
+        type="text"
+        value={formattedDate}
+        readOnly={true}
+        onChange={() => {}}
+      />
       <div className="calendar-icon">
         <CalenderIcon
           style={{

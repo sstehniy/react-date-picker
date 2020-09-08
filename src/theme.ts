@@ -27,6 +27,7 @@ interface ITheme {
     xxl: string;
     md_invert: string;
     button: string;
+    button_sm: string;
   };
 }
 
@@ -48,7 +49,7 @@ export const theme: ITheme = {
     btn_secondary_hover: "#CCCCCC",
   },
   shadow: {
-    sm: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+    sm: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.06)",
     md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
     lg:
       "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
@@ -57,6 +58,8 @@ export const theme: ITheme = {
     xxl: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
     md_invert:
       "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-    button: "0px 5px 15px rgba(0, 0, 0, 0.3)",
+    button: "0px 5px 17px 0 rgba(0, 0, 0, 0.4)",
+    button_sm:
+      "0 1px 5px 0 rgba(0, 0, 0, 0.4), 0 1px 5px 0 rgba(0, 0, 0, 0.06)",
   },
 };

@@ -12,7 +12,7 @@ type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & CustomButtonProps;
 const StyledButton = styled.button<CustomButtonProps>`
   height: 100%;
   max-height: 35px;
-  padding: 3px 12px;
+  padding: 3px 10px;
   margin: 0 5px;
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -55,7 +55,7 @@ ${({ secondary }) => {
     return (
       secondary &&
       css`
-        background-color: ${({ theme }) => theme.color.btn_secondary};
+        background-color: ${({ theme }) => theme.color.text_secondary};
       `
     );
   }}

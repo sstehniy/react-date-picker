@@ -3,12 +3,12 @@ export enum DateType {
   DOUBLE,
 }
 
-export type DateData = {
+export type SelectedDateData = {
   fromDate?: DateScalars;
   toDate?: DateScalars;
 };
 
-type DateScalars = {
+export type DateScalars = {
   day: string;
   month: string;
   year: string;

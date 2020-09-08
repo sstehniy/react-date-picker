@@ -1,9 +1,9 @@
 import { createContext } from "react";
-import { DateData } from "../typeDefs";
+import { SelectedDateData } from "../typeDefs";
 import { MonthChanhgeType } from "../DateCalendar";
 
 type ContextType = {
-  date: DateData;
+  date: SelectedDateData;
   toggleDatePicker: () => void;
   selectDate: (day: number, month: number, year: number) => void;
   discardSelectedDate: () => void;

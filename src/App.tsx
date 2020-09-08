@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import DatePicker from "./components/DatePicker";
 
@@ -10,10 +10,15 @@ const StyledApp = styled.div`
   justify-content: center;
 `;
 
-const App: React.FC = () => {
+const App = (): JSX.Element => {
+  const [date, setDate] = useState({});
   return (
     <StyledApp>
-      <DatePicker />
+      <DatePicker
+        getDate={date => {
+          setDate(date);
+        }}
+      />
     </StyledApp>
   );
 };
