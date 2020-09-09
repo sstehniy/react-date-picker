@@ -58,6 +58,24 @@ const StyledDateComponent = styled.span<StyledProps>`
     `}
 
   ${({ active, isFixed }) =>
+    !!(active && !isFixed) &&
+    css`
+      &:before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: -1px;
+        bottom: -3px;
+        left: -2px;
+        right: -2px;
+        border-radius: 50%;
+        background-color: ${({ theme }) => theme.color.background_secondary};
+        border: 2px solid ${({ theme: { color } }) => color.btn_primary};
+        box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
+      }
+    `}
+
+  ${({ active, isFixed }) =>
     !!(active && isFixed) &&
     css`
       &:before {
@@ -136,7 +154,7 @@ const DateComponent = ({
   isFixed,
 }: DateComponentProps) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const { date: selectedDate } = useContext(Context);
+  const { date: selectedDate, discardSelectedDate } = useContext(Context);
 
   /* useEffect(() => {
     if (!ref.current) return;
@@ -158,6 +176,10 @@ const DateComponent = ({
     if (!ref.current) return;
     const node = ref.current;
     const handleHover = () => {
+      if (date.disabled) {
+        discardSelectedDate();
+        return;
+      }
       if (
         (selectedDate.fromDate && //
           (date.year < +selectedDate.fromDate.year || //
@@ -171,6 +193,7 @@ const DateComponent = ({
       ) {
         return;
       }
+
       onHover();
     };
 
