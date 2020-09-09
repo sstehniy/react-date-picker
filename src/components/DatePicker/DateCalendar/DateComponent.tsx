@@ -208,6 +208,7 @@ const DateComponent = ({
     date.disabled,
     date.month,
     date.year,
+    discardSelectedDate,
     onHover,
     ref,
     selectedDate.fromDate,
