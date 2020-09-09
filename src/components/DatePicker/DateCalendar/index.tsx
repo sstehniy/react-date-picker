@@ -120,18 +120,7 @@ const DateCalendar = ({
     const node = calendarRef.current;
 
     node.classList.add("onMount");
-
-    const handleMouseLeave = () => {
-      setCurrentMonthYear(defaultMonthYear);
-      discardSelectedDate();
-    };
-
-    node.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      node.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, [calendarRef, defaultMonthYear, discardSelectedDate]);
+  }, [calendarRef]);
 
   const handleToogleDatePicker = useCallback(() => {
     if (calendarRef.current) {
