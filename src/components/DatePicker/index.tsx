@@ -16,7 +16,7 @@ const DatePickerWrapper = styled.div`
 const defaultDate = new Date();
 
 const DatePicker = ({ getDate }: DatePickerProps) => {
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(true);
   const [selectedDate, setSelectedDate] = useState<SelectedDateData>({
     fromDate: {
       day: getFormattedDate(defaultDate.getUTCDate()),
@@ -24,11 +24,12 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
       year: defaultDate.getFullYear().toString(),
       isFixed: true,
     },
-    /* toDate: {
-      day: getFormattedDate(defaultDate.getUTCDate() + 22),
+    toDate: {
+      day: getFormattedDate(defaultDate.getUTCDate() + 12),
       month: getFormattedDate(defaultDate.getUTCMonth() + 1),
       year: defaultDate.getFullYear().toString(),
-    }, */
+      isFixed: true,
+    },
   });
 
   useEffect(() => {

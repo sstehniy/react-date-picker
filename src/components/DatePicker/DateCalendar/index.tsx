@@ -49,6 +49,46 @@ type DateCalenderProps = {
 };
 
 const CalendarWrapper = styled.div`
+  @media screen and (max-width: 420px) {
+    position: fixed;
+    width: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transform: translate(0, 0) !important;
+    border-radius: 5px;
+    &.onMount {
+      animation: popIn 0.2s forwards ease;
+
+      @keyframes popIn {
+        from {
+          transform: scale(0.5);
+          opacity: 0.8;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    }
+
+    &.onUnmount {
+      animation: popOut 0.2s forwards ease;
+
+      @keyframes popOut {
+        from {
+          transform: scale(0.9);
+          opacity: 1;
+        }
+        to {
+          transform: scale(0.2);
+          opacity: 0;
+        }
+      }
+    }
+  }
+
   position: absolute;
   width: 300px;
   top: 50%;
@@ -172,6 +212,20 @@ const DateCalendar = ({
 
 /* ------------------------------------- */
 const StyledCalendarHead = styled.div`
+  @media screen and (max-width: 420px) {
+    height: 55px;
+    padding: 0 20px;
+
+    & > svg {
+      height: 25px !important;
+      width: 25px !important;
+    }
+
+    & > p {
+      font-size: 1.5rem !important;
+    }
+  }
+
   height: 45px;
   width: 100%;
   display: flex;
@@ -241,6 +295,9 @@ const CalendarHead = () => {
 
 /* ------------------------------------- */
 const StyledCalendarBody = styled.div`
+  @media screen and (max-width: 420px) {
+    height: 400px;
+  }
   height: 330px;
   padding: 10px 15px;
   background-color: transparent;
@@ -249,6 +306,10 @@ const StyledCalendarBody = styled.div`
 `;
 
 const BodyHead = styled.div`
+  @media screen and (max-width: 420px) {
+    height: 30px;
+    padding: 0 10px;
+  }
   height: 25px;
   padding: 0 8px 0 0;
   font-size: 1rem;
@@ -259,11 +320,14 @@ const BodyHead = styled.div`
 `;
 
 const BodyMain = styled.div`
+  @media screen and (max-width: 420px) {
+    flex: 1;
+  }
   display: grid;
+  height: auto;
   grid-template-columns: repeat(7, 1fr);
   place-items: center;
   justify-items: center;
-
   font-size: 1.2rem;
 `;
 
@@ -465,6 +529,15 @@ const CalendarBody = () => {
 
 /* ------------------------------------- */
 const StyledCalendarFooter = styled.div`
+  @media screen and (max-width: 420px) {
+    height: 60px;
+
+    & > button {
+      padding: 10px 20px !important;
+      font-size: 0.8rem;
+    }
+  }
+
   position: absolute;
   bottom: 0;
   height: 45px;
