@@ -1,6 +1,4 @@
 {
-  "name": "react-date-picker",
-  "homepage": "https://sstehniy.github.io/react-date-picker/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
