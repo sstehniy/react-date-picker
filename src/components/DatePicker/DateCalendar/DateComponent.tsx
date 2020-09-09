@@ -156,22 +156,6 @@ const DateComponent = ({
   const ref = useRef<HTMLSpanElement>(null);
   const { date: selectedDate, discardSelectedDate } = useContext(Context);
 
-  /* useEffect(() => {
-    if (!ref.current) return;
-    const node = ref.current;
-    const handleHover = () => {
-      if (!selectedDate.fromDate || date.disabled) return;
-      console.log("");
-      onClick();
-    };
-
-    node.addEventListener("mouseover", handleHover);
-
-    return () => {
-      node.removeEventListener("mouseover", handleHover);
-    };
-  }, [onClick, ref]); */
-
   useEffect(() => {
     if (!ref.current) return;
     const node = ref.current;

@@ -75,7 +75,6 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
           month < +selectedDate.fromDate.month) ||
         year < +selectedDate.fromDate.year)
     ) {
-      console.log("fdshfdhsdf");
       setSelectedDate({
         fromDate: {
           day: getFormattedDate(day),
@@ -95,7 +94,6 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
       month === +selectedDate.toDate.month &&
       year === +selectedDate.toDate.year
     ) {
-      console.log("hhhh");
       setSelectedDate({
         fromDate: { ...(selectedDate.fromDate as DateScalars), isFixed: true },
       });
@@ -113,7 +111,6 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
           day > +selectedDate.fromDate.day) ||
         year > +selectedDate.fromDate.year)
     ) {
-      console.log("ggsdfhs");
       setSelectedDate({
         ...selectedDate,
         toDate: {
@@ -138,7 +135,6 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
         +selectedDate.fromDate.year >= year) ||
       (!selectedDate.fromDate && !selectedDate.toDate)
     ) {
-      console.log("dlks;hgsdkhg;sd");
       setSelectedDate({
         fromDate: {
           day: getFormattedDate(day),

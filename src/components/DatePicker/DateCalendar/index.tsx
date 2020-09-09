@@ -285,32 +285,6 @@ const CalendarBody = () => {
   const monthNumber = +currentMonthYear.month - 1;
   const yearNumber = +currentMonthYear.year;
 
-  /*   useEffect(() => {
-    if (!dateRefs.length) return;
-    const handleHover = (e: MouseEvent) => {
-      if (selectedDate.toDate) return;
-      const node = e.target;
-      if (!(node instanceof HTMLSpanElement)) return;
-      const { day, month, year, disabled } = node.dataset;
-      if (
-        !(day && month && year) ||
-        (disabled && convertStringToBool(disabled as "true" | "false"))
-      )
-        return;
-      console.log(day, month, year, disabled);
-      selectDate(+day, +month, +year);
-    };
-
-    for (const refNode of dateRefs) {
-      refNode.addEventListener("mouseover", handleHover);
-    }
-    return () => {
-      for (const refNode of dateRefs) {
-        refNode.removeEventListener("mouseover", handleHover);
-      }
-    };
-  }, [dateRefs, selectDate, selectedDate.toDate]); */
-
   const currentCalender = useMemo(() => {
     let days: DateData[] = [];
     let day = 1;
