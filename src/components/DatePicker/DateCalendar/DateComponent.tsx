@@ -176,7 +176,7 @@ const DateComponent = ({
     if (!ref.current) return;
     const node = ref.current;
     const handleHover = () => {
-      if (date.disabled && selectedDate.toDate?.isFixed) {
+      if (date.disabled && !selectedDate.toDate?.isFixed) {
         discardSelectedDate();
         return;
       }
