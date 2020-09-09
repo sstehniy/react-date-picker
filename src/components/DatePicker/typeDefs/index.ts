@@ -12,6 +12,7 @@ export type DateScalars = {
   day: string;
   month: string;
   year: string;
+  isFixed?: boolean;
 };
 
 export type DateData = {

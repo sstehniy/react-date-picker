@@ -6,16 +6,18 @@ import Context from "../context";
 type DateComponentProps = {
   date: DateData;
   onClick: () => void;
+  onHover: () => void;
   active: boolean;
   subActive: boolean;
   showSpan: boolean;
   isFirst: boolean;
   isLast: boolean;
+  isFixed?: boolean;
 };
 
 type StyledProps = Pick<
   DateComponentProps,
-  "active" | "subActive" | "isFirst" | "isLast" | "showSpan"
+  "active" | "subActive" | "isFirst" | "isLast" | "isFixed" | "showSpan"
 > & {
   disabled?: boolean;
 };
@@ -32,13 +34,31 @@ const StyledDateComponent = styled.span<StyledProps>`
   align-items: center;
   font-size: 1rem;
   user-select: none;
-  color: ${({ theme, active, subActive, disabled }) => {
+  color: ${({ theme, active, subActive, disabled, isFixed }) => {
     if (disabled) return theme.color.background_primary;
-    if (active) return theme.color.background_secondary;
+    if (active && isFixed) return theme.color.background_secondary;
     if (subActive) return theme.color.text_secondary;
   }};
-  ${({ active }) =>
-    active &&
+  ${({ active, disabled, subActive, isFixed }) =>
+    !!(active && !disabled && !subActive && !isFixed) &&
+    css`
+      &:hover:before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: -1px;
+        bottom: -3px;
+        left: -2px;
+        right: -2px;
+        border-radius: 50%;
+        background-color: ${({ theme }) => theme.color.background_secondary};
+        border: 2px solid ${({ theme: { color } }) => color.btn_primary};
+        box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
+      }
+    `}
+
+  ${({ active, isFixed }) =>
+    !!(active && isFixed) &&
     css`
       &:before {
         content: "";
@@ -107,16 +127,18 @@ const StyledDateComponent = styled.span<StyledProps>`
 const DateComponent = ({
   date,
   onClick,
+  onHover,
   active,
   subActive,
   showSpan,
   isFirst,
   isLast,
+  isFixed,
 }: DateComponentProps) => {
   const ref = useRef<HTMLSpanElement>(null);
   const { date: selectedDate } = useContext(Context);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!ref.current) return;
     const node = ref.current;
     const handleHover = () => {
@@ -130,7 +152,44 @@ const DateComponent = ({
     return () => {
       node.removeEventListener("mouseover", handleHover);
     };
-  }, [onClick, ref]);
+  }, [onClick, ref]); */
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const node = ref.current;
+    const handleHover = () => {
+      if (
+        (selectedDate.fromDate && //
+          (date.year < +selectedDate.fromDate.year || //
+            (date.year === +selectedDate.fromDate.year &&
+              ((date.month === +selectedDate.fromDate.month - 1 &&
+                date.date < +selectedDate.fromDate.day) ||
+                date.month < +selectedDate.fromDate.month - 1)))) ||
+        date.disabled ||
+        (selectedDate.toDate && selectedDate.toDate.isFixed) ||
+        !selectedDate.fromDate
+      ) {
+        return;
+      }
+      onHover();
+    };
+
+    node.addEventListener("mouseover", handleHover);
+
+    return () => {
+      node.removeEventListener("mouseover", handleHover);
+    };
+  }, [
+    date.date,
+    date.day,
+    date.disabled,
+    date.month,
+    date.year,
+    onHover,
+    ref,
+    selectedDate.fromDate,
+    selectedDate.toDate,
+  ]);
 
   return (
     <StyledDateComponent
@@ -141,11 +200,8 @@ const DateComponent = ({
       showSpan={showSpan}
       isFirst={isFirst}
       isLast={isLast}
+      isFixed={isFixed}
       ref={ref}
-      data-day={date.date}
-      data-month={date.month}
-      data-year={date.year}
-      data-disabled={date.disabled}
     >
       {date.date}
     </StyledDateComponent>

@@ -5,11 +5,11 @@ import React, {
   useRef,
   useEffect,
   useCallback,
-  ReactNode,
 } from "react";
 import styled from "styled-components";
 import { ReactComponent as Arrow } from "../../../assets/next.svg";
 import { SelectedDateData, DateScalars, DateData } from "../typeDefs";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 import Context from "../context";
 import DateComponent from "./DateComponent";
 import Button from "../../shared/Button";
@@ -39,13 +39,17 @@ const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 type DateCalenderProps = {
   date: SelectedDateData;
   discardSelectedDate: () => void;
-  selectDate: (day: number, month: number, year: number) => void;
+  selectDate: (
+    day: number,
+    month: number,
+    year: number,
+    isFixed?: boolean
+  ) => void;
   toggleDatePicker: () => void;
 };
 
 const CalendarWrapper = styled.div`
   position: absolute;
-
   width: 300px;
   top: 50%;
   left: -6%;
@@ -107,10 +111,27 @@ const DateCalendar = ({
 
   const calendarRef = useRef<HTMLDivElement>(null);
 
+  useClickOutside(calendarRef, (e: MouseEvent) => {
+    toggleDatePicker();
+  });
+
   useEffect(() => {
     if (!calendarRef.current) return;
-    calendarRef.current.classList.add("onMount");
-  }, [calendarRef]);
+    const node = calendarRef.current;
+
+    node.classList.add("onMount");
+
+    const handleMouseLeave = () => {
+      setCurrentMonthYear(defaultMonthYear);
+      discardSelectedDate();
+    };
+
+    node.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      node.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [calendarRef, defaultMonthYear, discardSelectedDate]);
 
   const handleToogleDatePicker = useCallback(() => {
     if (calendarRef.current) {
@@ -430,6 +451,21 @@ const CalendarBody = () => {
     return day === +day_2 && month === +month_2 - 1 && year === +year_2;
   };
 
+  const fixedDateMatch = (
+    toCompare: DateData,
+    compareWith: DateScalars | undefined
+  ) => {
+    if (!compareWith) return false;
+    const { date: day, month, year } = toCompare;
+    const { day: day_2, month: month_2, year: year_2 } = compareWith;
+    return (
+      day === +day_2 &&
+      month === +month_2 - 1 &&
+      year === +year_2 &&
+      compareWith.isFixed
+    );
+  };
+
   return (
     <StyledCalendarBody>
       <BodyHead>
@@ -443,6 +479,9 @@ const CalendarBody = () => {
             key={i}
             date={dateData}
             onClick={() => {
+              selectDate(dateData.date, monthNumber + 1, yearNumber, true);
+            }}
+            onHover={() => {
               selectDate(dateData.date, monthNumber + 1, yearNumber);
             }}
             active={checkDateIsActive(dateData)}
@@ -450,6 +489,10 @@ const CalendarBody = () => {
             showSpan={!!(selectedDate.fromDate && selectedDate.toDate)}
             isFirst={dateMatch(dateData, selectedDate.fromDate)}
             isLast={dateMatch(dateData, selectedDate.toDate)}
+            isFixed={
+              fixedDateMatch(dateData, selectedDate.toDate) ||
+              fixedDateMatch(dateData, selectedDate.fromDate)
+            }
           />
         ))}
       </BodyMain>

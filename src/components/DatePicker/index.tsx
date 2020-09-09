@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getFormattedDate } from "../../util/getFormattedDate";
-import { SelectedDateData } from "./typeDefs";
+import { SelectedDateData, DateScalars } from "./typeDefs";
 import DateInput from "./DateInput";
 import DateCalendar from "./DateCalendar/index";
 
@@ -22,6 +22,7 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
       day: getFormattedDate(defaultDate.getUTCDate()),
       month: getFormattedDate(defaultDate.getUTCMonth() + 1),
       year: defaultDate.getFullYear().toString(),
+      isFixed: true,
     },
     /* toDate: {
       day: getFormattedDate(defaultDate.getUTCDate() + 22),
@@ -44,11 +45,17 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
         day: getFormattedDate(defaultDate.getUTCDate()),
         month: getFormattedDate(defaultDate.getUTCMonth() + 1),
         year: getFormattedDate(defaultDate.getFullYear()),
+        isFixed: true,
       },
     });
   };
 
-  const selectDate = (day: number, month: number, year: number) => {
+  const selectDate = (
+    day: number,
+    month: number,
+    year: number,
+    isFixed?: boolean
+  ) => {
     if (
       selectedDate.fromDate &&
       +selectedDate.fromDate.day === day &&
@@ -57,6 +64,68 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
     ) {
       setSelectedDate({});
     }
+
+    if (
+      selectedDate.fromDate &&
+      !selectedDate.toDate &&
+      ((year === +selectedDate.fromDate.year &&
+        month === +selectedDate.fromDate.month &&
+        day < +selectedDate.fromDate.day) ||
+        (year === +selectedDate.fromDate.year &&
+          month < +selectedDate.fromDate.month) ||
+        year < +selectedDate.fromDate.year)
+    ) {
+      console.log("fdshfdhsdf");
+      setSelectedDate({
+        fromDate: {
+          day: getFormattedDate(day),
+          month: getFormattedDate(month),
+          year: year.toString(),
+          isFixed: true,
+        },
+      });
+      return;
+    }
+
+    if (
+      selectedDate.toDate &&
+      selectedDate.toDate.isFixed &&
+      isFixed &&
+      day === +selectedDate.toDate.day &&
+      month === +selectedDate.toDate.month &&
+      year === +selectedDate.toDate.year
+    ) {
+      console.log("hhhh");
+      setSelectedDate({
+        fromDate: { ...(selectedDate.fromDate as DateScalars), isFixed: true },
+      });
+      return;
+    }
+
+    /**
+     * if from date is selected and selected to-date is sooner then selected from date
+     */
+    if (
+      selectedDate.fromDate &&
+      ((year === +selectedDate.fromDate.year &&
+        month > +selectedDate.fromDate.month) ||
+        (month === +selectedDate.fromDate.month &&
+          day > +selectedDate.fromDate.day) ||
+        year > +selectedDate.fromDate.year)
+    ) {
+      console.log("ggsdfhs");
+      setSelectedDate({
+        ...selectedDate,
+        toDate: {
+          day: getFormattedDate(day),
+          month: getFormattedDate(month),
+          year: year.toString(),
+          isFixed,
+        },
+      });
+      return;
+    }
+
     /**
      * - if both form/to dates are chosen
      * - if the chosen date is earlier then selected from date
@@ -69,30 +138,13 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
         +selectedDate.fromDate.year >= year) ||
       (!selectedDate.fromDate && !selectedDate.toDate)
     ) {
+      console.log("dlks;hgsdkhg;sd");
       setSelectedDate({
         fromDate: {
           day: getFormattedDate(day),
           month: getFormattedDate(month),
           year: year.toString(),
-        },
-      });
-    }
-    /**
-     * if from date is selected and selected to date is sooner then selected from date
-     */
-    if (
-      selectedDate.fromDate &&
-      ((year === +selectedDate.fromDate.year &&
-        month >= +selectedDate.fromDate.month &&
-        day > +selectedDate.fromDate.day) ||
-        year > +selectedDate.fromDate.year)
-    ) {
-      setSelectedDate({
-        ...selectedDate,
-        toDate: {
-          day: getFormattedDate(day),
-          month: getFormattedDate(month),
-          year: year.toString(),
+          isFixed: true,
         },
       });
     }

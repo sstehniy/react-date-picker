@@ -5,7 +5,12 @@ import { MonthChanhgeType } from "../DateCalendar/index";
 type ContextType = {
   date: SelectedDateData;
   toggleDatePicker: () => void;
-  selectDate: (day: number, month: number, year: number) => void;
+  selectDate: (
+    day: number,
+    month: number,
+    year: number,
+    isFixed?: boolean
+  ) => void;
   discardSelectedDate: () => void;
   currentMonthYear: {
     month: string;
