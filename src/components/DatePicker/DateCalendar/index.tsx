@@ -98,8 +98,8 @@ const CalendarWrapper = styled.div`
   background-color: ${({ theme }) => theme.color.background_secondary};
   box-shadow: ${({ theme }) => theme.shadow.xxl};
   overflow: hidden;
-  transform: scale(0.5);
-  opacity: 0;
+  /* transform: scale(0.5);
+  opacity: 0; */
 
   &.onMount {
     animation: popIn 0.2s forwards ease;
@@ -155,18 +155,18 @@ const DateCalendar = ({
     toggleDatePicker();
   });
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!calendarRef.current) return;
     const node = calendarRef.current;
 
     node.classList.add("onMount");
-  }, [calendarRef]);
+  }, [calendarRef]); */
 
   const handleToogleDatePicker = useCallback(() => {
     if (calendarRef.current) {
       const node = calendarRef.current;
-      node.classList.add("onUnmount");
-      setTimeout(() => {
+      /*       node.classList.add("onUnmount");
+       */ setTimeout(() => {
         toggleDatePicker();
       }, 200);
     }

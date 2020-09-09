@@ -96,18 +96,20 @@ const StyledDateComponent = styled.span<StyledProps>`
   ${({ active, isFixed }) =>
     !!(active && isFixed) &&
     css`
-      &:before {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        top: -3px !important;
-        bottom: -4px !important;
-        left: -4px !important;
-        right: -4px !important;
-        border-radius: 50%;
-        background-color: ${({ theme }) => theme.color.background_secondary};
-        border: 2px solid ${({ theme: { color } }) => color.btn_primary};
-        box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
+      @media screen and (max-width: 420px) {
+        &:before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          top: -3px !important;
+          bottom: -4px !important;
+          left: -4px !important;
+          right: -4px !important;
+          border-radius: 50%;
+          background-color: ${({ theme }) => theme.color.background_secondary};
+          border: 2px solid ${({ theme: { color } }) => color.btn_primary};
+          box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
+        }
       }
       &:before {
         content: "";
