@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { csc } from "styled-components";
+import styled, { css } from "styled-components";
 
 type CustomButtonProps = {
   primary?: boolean;
