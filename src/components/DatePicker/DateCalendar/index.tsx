@@ -329,8 +329,6 @@ const BodyMain = styled.div`
   place-items: center;
   justify-items: center;
   font-size: 1.2rem;
-  box-shadow: inset 4px 0 10px 0 rgba(255, 255, 255, 0.7),
-    inset -4px 0 10px 0 rgba(255, 255, 255, 0.7);
 
   @media screen and (max-width: 420px) {
     flex: 1;
