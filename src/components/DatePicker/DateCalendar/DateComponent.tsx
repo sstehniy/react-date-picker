@@ -76,14 +76,10 @@ const StyledDateComponent = styled.span<StyledProps>`
 
       @media screen and (max-width: 420px) {
         &:before {
-          @media screen and (max-width: 420px) {
-            &:before {
-              top: -3px;
-              bottom: -4px;
-              left: -4px;
-              right: -4px;
-            }
-          }
+          top: -3px;
+          bottom: -4px;
+          left: -4px;
+          right: -4px;
         }
       }
     `}
@@ -146,7 +142,7 @@ const StyledDateComponent = styled.span<StyledProps>`
         top: 55%;
         right: 50%;
         transform: translateY(-50%);
-        width: 64%;
+        width: 64.5%;
         height: 23px;
         background-color: ${({ theme: { color } }) => color.select_secondary};
         opacity: 0.5;
@@ -177,7 +173,7 @@ const StyledDateComponent = styled.span<StyledProps>`
         top: 55%;
         left: 50%;
         transform: translateY(-50%);
-        width: 64%;
+        width: 64.5%;
         height: 23px;
         background-color: ${({ theme: { color } }) => color.select_secondary};
         opacity: 0.5;
@@ -197,6 +193,16 @@ const StyledDateComponent = styled.span<StyledProps>`
         }
       }
     `}
+
+    ${({ disabled }) => {
+    return (
+      disabled &&
+      css`
+        box-shadow: 10px 0 10px 0 rgba(255, 255, 255, 0.5),
+          -10px 0 10px 0 rgba(255, 255, 255, 0.5);
+      `
+    );
+  }}
 
     @media screen and (max-width: 420px) {
     font-size: 1.1rem;

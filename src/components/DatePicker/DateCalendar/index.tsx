@@ -212,20 +212,6 @@ const DateCalendar = ({
 
 /* ------------------------------------- */
 const StyledCalendarHead = styled.div`
-  @media screen and (max-width: 420px) {
-    height: 55px;
-    padding: 0 20px;
-
-    & > svg {
-      height: 25px !important;
-      width: 25px !important;
-    }
-
-    & > p {
-      font-size: 1.5rem !important;
-    }
-  }
-
   height: 45px;
   width: 100%;
   display: flex;
@@ -261,6 +247,20 @@ const StyledCalendarHead = styled.div`
     font-size: 1.3rem;
     color: ${({ theme }) => theme.color.text_secondary};
   }
+
+  @media screen and (max-width: 420px) {
+    height: 55px;
+    padding: 0 20px;
+
+    & > svg {
+      height: 25px;
+      width: 25px;
+    }
+
+    & > p {
+      font-size: 1.5rem;
+    }
+  }
 `;
 
 const CalendarHead = () => {
@@ -295,21 +295,18 @@ const CalendarHead = () => {
 
 /* ------------------------------------- */
 const StyledCalendarBody = styled.div`
-  @media screen and (max-width: 420px) {
-    height: 400px;
-  }
   height: 330px;
   padding: 10px 15px;
   background-color: transparent;
   display: flex;
   flex-direction: column;
+
+  @media screen and (max-width: 420px) {
+    height: 400px;
+  }
 `;
 
 const BodyHead = styled.div`
-  @media screen and (max-width: 420px) {
-    height: 30px;
-    padding: 0 10px;
-  }
   height: 25px;
   padding: 0 8px 0 0;
   font-size: 1rem;
@@ -317,18 +314,27 @@ const BodyHead = styled.div`
   align-items: center;
   justify-content: space-between;
   user-select: none;
+
+  @media screen and (max-width: 420px) {
+    height: 30px;
+    padding: 0 10px;
+  }
 `;
 
 const BodyMain = styled.div`
-  @media screen and (max-width: 420px) {
-    flex: 1;
-  }
   display: grid;
   height: auto;
+  padding: 0 0 10px 0;
   grid-template-columns: repeat(7, 1fr);
   place-items: center;
   justify-items: center;
   font-size: 1.2rem;
+  box-shadow: inset 4px 0 10px 0 rgba(255, 255, 255, 0.7),
+    inset -4px 0 10px 0 rgba(255, 255, 255, 0.7);
+
+  @media screen and (max-width: 420px) {
+    flex: 1;
+  }
 `;
 
 const CalendarBody = () => {

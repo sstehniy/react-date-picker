@@ -6,7 +6,7 @@ import DateInput from "./DateInput";
 import DateCalendar from "./DateCalendar/index";
 
 type DatePickerProps = {
-  getDate: (date: SelectedDateData) => void;
+  getDate: (date: SelectedDateData | { date: DateScalars }) => void;
 };
 
 const DatePickerWrapper = styled.div`
@@ -16,7 +16,7 @@ const DatePickerWrapper = styled.div`
 const defaultDate = new Date();
 
 const DatePicker = ({ getDate }: DatePickerProps) => {
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(true);
   const [selectedDate, setSelectedDate] = useState<SelectedDateData>({
     fromDate: {
       day: getFormattedDate(defaultDate.getUTCDate()),
@@ -24,10 +24,21 @@ const DatePicker = ({ getDate }: DatePickerProps) => {
       year: defaultDate.getFullYear().toString(),
       isFixed: true,
     },
+    toDate: {
+      day: getFormattedDate(defaultDate.getUTCDate() + 15),
+      month: getFormattedDate(defaultDate.getUTCMonth() + 1),
+      year: defaultDate.getFullYear().toString(),
+      isFixed: true,
+    },
   });
 
   useEffect(() => {
-    getDate(selectedDate);
+    const dateToReturn = selectedDate.fromDate
+      ? selectedDate.toDate
+        ? selectedDate
+        : { date: selectedDate.fromDate }
+      : {};
+    getDate(dateToReturn);
   }, [getDate, selectedDate]);
 
   const toggleDatePicker = () => {

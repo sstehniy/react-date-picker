@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import DatePicker from "./components/DatePicker";
 import Button from "./components/shared/Button";
@@ -14,14 +14,16 @@ const StyledApp = styled.div`
 
 const App = (): JSX.Element => {
   const [date, setDate] = useState({});
+
+  const handleSetDate = useCallback((date: any) => {
+    setDate(date);
+  }, []);
+
   return (
     <StyledApp>
-      <DatePicker
-        getDate={date => {
-          setDate(date);
-        }}
-      />
-      <ButtonsExpose />
+      <DatePicker getDate={handleSetDate} />
+      {/*       <ButtonsExpose />
+       */}{" "}
     </StyledApp>
   );
 };
