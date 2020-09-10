@@ -21,9 +21,8 @@ const App = (): JSX.Element => {
 
   return (
     <StyledApp>
-      <DatePicker getDate={handleSetDate} />
-      {/*       <ButtonsExpose />
-       */}{" "}
+      {/* <DatePicker getDate={handleSetDate} /> */}
+      {/*<ButtonsExpose />*/}
     </StyledApp>
   );
 };

@@ -194,17 +194,7 @@ const StyledDateComponent = styled.span<StyledProps>`
       }
     `}
 
-    ${({ disabled }) => {
-    return (
-      disabled &&
-      css`
-        box-shadow: 10px 0 10px 0 rgba(255, 255, 255, 0.5),
-          -10px 0 10px 0 rgba(255, 255, 255, 0.5);
-      `
-    );
-  }}
-
-    @media screen and (max-width: 420px) {
+  @media screen and (max-width: 420px) {
     font-size: 1.1rem;
   }
 `;
