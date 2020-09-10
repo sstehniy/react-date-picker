@@ -23,9 +23,6 @@ type StyledProps = Pick<
 };
 
 const StyledDateComponent = styled.span<StyledProps>`
-  @media screen and (max-width: 420px) {
-    font-size: 1.1rem;
-  }
   cursor: pointer;
   position: relative;
   height: 30px;
@@ -63,21 +60,6 @@ const StyledDateComponent = styled.span<StyledProps>`
   ${({ active, isFixed }) =>
     !!(active && !isFixed) &&
     css`
-      @media screen and (max-width: 420px) {
-        &:before {
-          content: "";
-          position: absolute;
-          z-index: -1;
-          top: -3px !important;
-          bottom: -4px !important;
-          left: -4px !important;
-          right: -4px !important;
-          border-radius: 50%;
-          background-color: ${({ theme }) => theme.color.background_secondary};
-          border: 2px solid ${({ theme: { color } }) => color.btn_primary};
-          box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
-        }
-      }
       &:before {
         content: "";
         position: absolute;
@@ -91,26 +73,24 @@ const StyledDateComponent = styled.span<StyledProps>`
         border: 2px solid ${({ theme: { color } }) => color.btn_primary};
         box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
       }
+
+      @media screen and (max-width: 420px) {
+        &:before {
+          @media screen and (max-width: 420px) {
+            &:before {
+              top: -3px;
+              bottom: -4px;
+              left: -4px;
+              right: -4px;
+            }
+          }
+        }
+      }
     `}
 
   ${({ active, isFixed }) =>
     !!(active && isFixed) &&
     css`
-      @media screen and (max-width: 420px) {
-        &:before {
-          content: "";
-          position: absolute;
-          z-index: -1;
-          top: -3px !important;
-          bottom: -4px !important;
-          left: -4px !important;
-          right: -4px !important;
-          border-radius: 50%;
-          background-color: ${({ theme }) => theme.color.background_secondary};
-          border: 2px solid ${({ theme: { color } }) => color.btn_primary};
-          box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
-        }
-      }
       &:before {
         content: "";
         position: absolute;
@@ -123,23 +103,19 @@ const StyledDateComponent = styled.span<StyledProps>`
         background-color: ${({ theme: { color } }) => color.btn_primary};
         box-shadow: ${({ theme: { shadow } }) => shadow.button_sm};
       }
+
+      @media screen and (max-width: 420px) {
+        &:before {
+          top: -3px;
+          bottom: -4px;
+          left: -4px;
+          right: -4px;
+        }
+      }
     `}
   ${({ subActive, disabled }) =>
     !!(subActive && !disabled) &&
     css`
-      @media screen and (max-width: 420px) {
-        &:after {
-          content: "";
-          position: absolute;
-          z-index: -2;
-          top: 50% !important;
-          transform: translateY(-50%);
-          width: 13.2vw !important;
-          height: 23px;
-          background-color: ${({ theme: { color } }) => color.select_secondary};
-          opacity: 0.5;
-        }
-      }
       &:after {
         content: "";
         position: absolute;
@@ -151,24 +127,18 @@ const StyledDateComponent = styled.span<StyledProps>`
         background-color: ${({ theme: { color } }) => color.select_secondary};
         opacity: 0.5;
       }
+
+      @media screen and (max-width: 420px) {
+        &:after {
+          top: 50%;
+          width: 13.15vw;
+        }
+      }
     `};
 
   ${({ isLast, disabled, showSpan }) =>
     !!(isLast && !disabled && showSpan) &&
     css`
-      @media screen and (max-width: 420px) {
-        &:after {
-          content: "";
-          position: absolute;
-          z-index: -2;
-          top: 50% !important;
-          transform: translateY(-50%);
-          width: 6.65vw !important;
-          height: 23px;
-          background-color: ${({ theme: { color } }) => color.select_secondary};
-          opacity: 0.5;
-        }
-      }
       &:after {
         content: "";
         position: absolute;
@@ -181,24 +151,25 @@ const StyledDateComponent = styled.span<StyledProps>`
         background-color: ${({ theme: { color } }) => color.select_secondary};
         opacity: 0.5;
       }
-    `}
 
-  ${({ isFirst, disabled, showSpan }) =>
-    !!(isFirst && !disabled && showSpan) &&
-    css`
       @media screen and (max-width: 420px) {
         &:after {
           content: "";
           position: absolute;
           z-index: -2;
-          top: 50% !important;
+          top: 50%;
           transform: translateY(-50%);
-          width: 6.65vw !important;
+          width: 6.645vw;
           height: 23px;
           background-color: ${({ theme: { color } }) => color.select_secondary};
           opacity: 0.5;
         }
       }
+    `}
+
+  ${({ isFirst, disabled, showSpan }) =>
+    !!(isFirst && !disabled && showSpan) &&
+    css`
       &:after {
         content: "";
         position: absolute;
@@ -211,7 +182,25 @@ const StyledDateComponent = styled.span<StyledProps>`
         background-color: ${({ theme: { color } }) => color.select_secondary};
         opacity: 0.5;
       }
+
+      @media screen and (max-width: 420px) {
+        &:after {
+          content: "";
+          position: absolute;
+          z-index: -2;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 6.645vw;
+          height: 23px;
+          background-color: ${({ theme: { color } }) => color.select_secondary};
+          opacity: 0.5;
+        }
+      }
     `}
+
+    @media screen and (max-width: 420px) {
+    font-size: 1.1rem;
+  }
 `;
 
 const DateComponent = ({

@@ -49,6 +49,48 @@ type DateCalenderProps = {
 };
 
 const CalendarWrapper = styled.div`
+  position: absolute;
+  width: 300px;
+  top: 50%;
+  left: -6%;
+  transform: translate(-50%, -50%);
+  border-radius: 15px;
+  background-color: ${({ theme }) => theme.color.background_secondary};
+  box-shadow: ${({ theme }) => theme.shadow.xxl};
+  overflow: hidden;
+  transform: scale(0.5);
+  opacity: 0;
+
+  &.onMount {
+    animation: popIn 0.2s forwards ease;
+
+    @keyframes popIn {
+      from {
+        transform: translateY(-50%) scale(0.5);
+        opacity: 0.8;
+      }
+      to {
+        transform: translateY(-50%) scale(1);
+        opacity: 1;
+      }
+    }
+  }
+
+  &.onUnmount {
+    animation: popOut 0.2s forwards ease;
+
+    @keyframes popOut {
+      from {
+        transform: translateY(-50%) scale(0.9);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-50%) scale(0.2);
+        opacity: 0;
+      }
+    }
+  }
+
   @media screen and (max-width: 420px) {
     position: fixed;
     width: auto;
@@ -56,7 +98,7 @@ const CalendarWrapper = styled.div`
     right: 0;
     top: 0;
     bottom: 0;
-    transform: translate(0, 0) !important;
+    transform: translate(0, 0);
     border-radius: 5px;
     &.onMount {
       animation: popIn 0.2s forwards ease;
@@ -88,48 +130,6 @@ const CalendarWrapper = styled.div`
       }
     }
   }
-
-  position: absolute;
-  width: 300px;
-  top: 50%;
-  left: -6%;
-  transform: translate(-50%, -50%);
-  border-radius: 15px;
-  background-color: ${({ theme }) => theme.color.background_secondary};
-  box-shadow: ${({ theme }) => theme.shadow.xxl};
-  overflow: hidden;
-  /* transform: scale(0.5);
-  opacity: 0; */
-
-  &.onMount {
-    animation: popIn 0.2s forwards ease;
-
-    @keyframes popIn {
-      from {
-        transform: translateY(-50%) scale(0.5);
-        opacity: 0.8;
-      }
-      to {
-        transform: translateY(-50%) scale(1);
-        opacity: 1;
-      }
-    }
-  }
-
-  &.onUnmount {
-    animation: popOut 0.2s forwards ease;
-
-    @keyframes popOut {
-      from {
-        transform: translateY(-50%) scale(0.9);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-50%) scale(0.2);
-        opacity: 0;
-      }
-    }
-  }
 `;
 
 const { Provider } = Context;
@@ -155,18 +155,18 @@ const DateCalendar = ({
     toggleDatePicker();
   });
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (!calendarRef.current) return;
     const node = calendarRef.current;
 
     node.classList.add("onMount");
-  }, [calendarRef]); */
+  }, [calendarRef]);
 
   const handleToogleDatePicker = useCallback(() => {
     if (calendarRef.current) {
       const node = calendarRef.current;
-      /*       node.classList.add("onUnmount");
-       */ setTimeout(() => {
+      node.classList.add("onUnmount");
+      setTimeout(() => {
         toggleDatePicker();
       }, 200);
     }
