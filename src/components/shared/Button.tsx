@@ -35,6 +35,12 @@ const StyledButton = styled.button<CustomButtonProps>`
         &:hover {
           box-shadow: ${({ theme }) => theme.shadow.button_hover};
         }
+
+        @media screen and (max-width: 420px) {
+          padding: 4px 8px;
+          font-size: 0.75rem;
+          font-weight: 500;
+        }
       `
     );
   }};
@@ -53,6 +59,11 @@ const StyledButton = styled.button<CustomButtonProps>`
         &:hover {
           box-shadow: ${({ theme }) => theme.shadow.button_hover};
         }
+
+        @media screen and (max-width: 420px) {
+          padding: 6px 12px;
+          font-size: 0.8rem;
+        }
       `
     );
   }};
@@ -70,6 +81,11 @@ const StyledButton = styled.button<CustomButtonProps>`
 
         &:hover {
           box-shadow: ${({ theme }) => theme.shadow.button_hover};
+        }
+
+        @media screen and (max-width: 420px) {
+          padding: 8px 15px;
+          font-size: 0.85rem;
         }
       `
     );

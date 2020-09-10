@@ -25,6 +25,7 @@ const StyledDateInput = styled.div`
     height: 35px;
     padding: 7px 50px 7px 15px;
     text-align: center;
+    line-height: 35px;
     font-size: 1rem;
     letter-spacing: 1px;
     outline: none;

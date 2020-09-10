@@ -531,11 +531,6 @@ const CalendarBody = () => {
 const StyledCalendarFooter = styled.div`
   @media screen and (max-width: 420px) {
     height: 60px;
-
-    & > button {
-      padding: 10px 20px !important;
-      font-size: 0.8rem;
-    }
   }
 
   position: absolute;
