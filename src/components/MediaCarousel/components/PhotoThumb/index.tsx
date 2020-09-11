@@ -1,12 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { Photo } from "../../types";
 
 type PhotoThumbProps = {
   isActive: boolean;
-  photo: {
-    src: string;
-    alt: string;
-  };
+  photo: Photo;
   onClick: () => void;
 };
 

@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import DatePicker from "./components/DatePicker";
 import Button from "./components/shared/Button";
+import MediaCarousel from "./components/MediaCarousel";
 
 const StyledApp = styled.div`
   min-height: 100vh;
@@ -21,9 +22,17 @@ const App = (): JSX.Element => {
 
   return (
     <StyledApp>
-      {/* <DatePicker getDate={handleSetDate} /> */}
+      <DatePicker getDate={handleSetDate} />
       {/*<ButtonsExpose />*/}
     </StyledApp>
+  );
+};
+
+const CarouselWrapper = () => {
+  return (
+    <div>
+      <MediaCarousel options={{}} />
+    </div>
   );
 };
 

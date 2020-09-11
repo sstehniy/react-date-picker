@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { Photo } from "../types";
 
 type CarouselPhotoProps = {
-  photo: {
-    src: string;
-    alt: string;
-  };
+  photo: Photo;
 };
 
 const StyledCarouselPhoto = styled.div``;
