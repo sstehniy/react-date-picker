@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Photo } from "./types";
 import PhotoThumb from "./components/PhotoThumb";
 import PointThumb from "./components/PointThumb";
-import { SwitchButtonLeft, SwitchButtonRight } from "./components/SwitchButton";
+import { LeftButton, RightButton } from "./components/SwitchButton";
 import CarouselPhoto from "./components/CarouselPhoto";
 // placeholder photos
 import space_1 from "../../assets/images/space_1.jpg";
@@ -51,46 +51,142 @@ const defaultOptions: DefaultOptions = {
 const StyledCarouselWrapper = styled.div`
   height: 100%;
   width: 100%;
+  background-color: red;
+  overflow: hidden;
 `;
 
 const CarouselBody = styled.div`
   position: relative;
+  display: flex;
 `;
+
+const CarouselFooter = styled.div<Pick<MediaCarouselProps, "options">>``;
 
 const MediaCarousel = ({
   photos: carouselPhotos = defaultPhotos,
-  options: {
+  options,
+  onChange = (currPhotoIndex: number) => {},
+}: MediaCarouselProps) => {
+  const {
     autoPlay = defaultOptions.autoPlay,
     autoPlayInterval = defaultOptions.autoPlayInterval,
     showThumbs: withThumbs = defaultOptions.showThumbs,
     thumbStyle = defaultOptions.thumbStyle,
     defaultPhotoIndex = defaultOptions.defaultPhotoIndex,
-  },
-  onChange = (currPhotoIndex: number) => {},
-}: MediaCarouselProps) => {
+  } = options;
   const [photos, setPhotos] = useState(carouselPhotos);
   const [currentIndex, setCurrentIndex] = useState(defaultPhotoIndex);
   const [play, setPlay] = useState(autoPlay);
   const [interval, setInterval] = useState(autoPlayInterval);
   const [showThumbs, setShowThumbs] = useState(withThumbs);
   const [thumbType, setThumbType] = useState(thumbStyle);
+
+  const [xOffset, setXOffset] = useState<number | null>(null);
+  const [bodyHeight, setBodyHeight] = useState<number | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!carouselRef.current) return;
+
+    if (showThumbs && footerRef.current) {
+      setBodyHeight(
+        carouselRef.current.getBoundingClientRect().height -
+          footerRef.current.getBoundingClientRect().height
+      );
+    } else {
+      setBodyHeight(carouselRef.current.getBoundingClientRect().height);
+    }
+
+    if (currentIndex === 0 || currentIndex === photos.length - 1) {
+      setPhotos([...photos, ...photos]);
+    }
+
+    setXOffset(
+      carouselRef.current.getBoundingClientRect().width * currentIndex
+    );
+  }, [carouselRef, footerRef]);
 
   const handleThumbClick = (index: number) => {};
 
-  const handleSwitchClickLeft = () => {};
+  const handleSwitchClickLeft = () => {
+    console.log(currentIndex, photos.length);
+    if (currentIndex === 0) {
+      setCurrentIndex(Math.floor(photos.length / 2) - 1);
+      return;
+    } else if (currentIndex === 1) {
+      setPhotos([...photos, ...photos]);
+    } else if (currentIndex === photos.length - 2) {
+      setPhotos(photos.splice(0, Math.floor(photos.length / 2)));
+      setCurrentIndex(photos.length - 3);
+    }
+    setCurrentIndex(currentIndex - 1);
+  };
 
-  const handleSwitchClickRight = () => {};
+  const handleSwitchClickRight = () => {
+    if (currentIndex === photos.length - 1) {
+      setCurrentIndex(Math.floor(photos.length / 2) + 1);
+      return;
+    } else if (currentIndex === photos.length - 2) {
+      setPhotos([...photos, ...photos]);
+    } else if (currentIndex === 0) {
+      setPhotos(photos.splice(0, Math.floor(photos.length / 2)));
+      setCurrentIndex(1);
+    }
+    setCurrentIndex(currentIndex + 1);
+  };
+
+  const footerElements = (() => {
+    if (!showThumbs || !thumbStyle) return null;
+    switch (thumbStyle) {
+      case "photo":
+        return (
+          <>
+            {photos.map((p, i) => (
+              <PhotoThumb
+                key={i}
+                photo={p}
+                isActive={i === currentIndex}
+                onClick={() => {
+                  handleThumbClick(i);
+                }}
+              />
+            ))}
+          </>
+        );
+      case "point":
+        return (
+          <>
+            {photos.map((_, i) => (
+              <PointThumb
+                key={i}
+                isActive={i === currentIndex}
+                onClick={() => handleThumbClick(i)}
+              />
+            ))}
+          </>
+        );
+      default:
+        return null;
+    }
+  })();
 
   return (
     <StyledCarouselWrapper ref={carouselRef}>
-      <CarouselBody>
-        <SwitchButtonLeft onClick={handleSwitchClickLeft} />
-        <SwitchButtonRight onClick={handleSwitchClickRight} />
-        {photos.map((p, i) => (
-          <CarouselPhoto key={i} photo={p} />
-        ))}
-      </CarouselBody>
+      {!!(xOffset !== null && bodyHeight) && (
+        <CarouselBody
+          style={{ height: bodyHeight, transform: `translateX(${xOffset})` }}
+        >
+          <LeftButton onClick={handleSwitchClickLeft} />
+          <RightButton onClick={handleSwitchClickRight} />
+          {photos.map((p, i) => (
+            <CarouselPhoto key={i} photo={p} />
+          ))}
+        </CarouselBody>
+      )}
+      {/* {showThumbs && (
+        <CarouselFooter options={options} ref={footerRef}>{footerElements}</CarouselFooter>
+      )} */}
     </StyledCarouselWrapper>
   );
 };

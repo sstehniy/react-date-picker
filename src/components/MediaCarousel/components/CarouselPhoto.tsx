@@ -6,7 +6,16 @@ type CarouselPhotoProps = {
   photo: Photo;
 };
 
-const StyledCarouselPhoto = styled.div``;
+const StyledCarouselPhoto = styled.div`
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  & > img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+`;
 
 const CarouselPhoto = ({ photo: { src, alt } }: CarouselPhotoProps) => {
   return (

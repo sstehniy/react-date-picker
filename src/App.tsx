@@ -22,7 +22,8 @@ const App = (): JSX.Element => {
 
   return (
     <StyledApp>
-      <DatePicker getDate={handleSetDate} />
+      <CarouselWrapper />
+      {/* <DatePicker getDate={handleSetDate} /> */}
       {/*<ButtonsExpose />*/}
     </StyledApp>
   );
@@ -30,7 +31,7 @@ const App = (): JSX.Element => {
 
 const CarouselWrapper = () => {
   return (
-    <div>
+    <div style={{ height: 350, width: 650 }}>
       <MediaCarousel options={{}} />
     </div>
   );
