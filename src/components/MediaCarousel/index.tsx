@@ -53,7 +53,7 @@ const defaultPhotos = [
 ];
 
 const defaultOptions: DefaultOptions = {
-  autoPlay: true,
+  autoPlay: false,
   autoPlayInterval: 3000,
   infiniteScroll: false,
   showSwitch: true,
@@ -130,38 +130,18 @@ const MediaCarousel = ({
     );
   }, [currentIndex, carouselRef]);
 
-  const stopAutoPlayTemp = () => {
+  const stopAutoPlayTemp = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    if (intervalRef.current && autoPlay) {
+    if (intervalRef.current && play) {
       clearInterval(intervalRef.current);
       setPlay(false);
       timeoutRef.current = setTimeout(() => {
         setPlay(true);
       }, 5000);
     }
-  };
-
-  const handleThumbClick = (index: number) => {
-    stopAutoPlayTemp();
-    setCurrentIndex(index);
-  };
-
-  const scrollLeft = useCallback(() => {
-    if (currentIndex === 0) {
-      setCurrentIndex(photos.length - 1);
-      setAnimationDuration(defaultAnimationDuration * (photos.length / 5) * 2);
-    } else {
-      setAnimationDuration(defaultAnimationDuration);
-      setCurrentIndex(currentIndex - 1);
-    }
-  }, [currentIndex, defaultAnimationDuration, photos.length]);
-
-  const handleSwitchClickLeft = () => {
-    stopAutoPlayTemp();
-    scrollLeft();
-  };
+  }, [play]);
 
   const scrollRight = useCallback(() => {
     if (currentIndex === photos.length - 1) {
@@ -173,12 +153,34 @@ const MediaCarousel = ({
     }
   }, [currentIndex, defaultAnimationDuration, photos.length]);
 
+  const scrollLeft = useCallback(() => {
+    if (currentIndex === 0) {
+      setCurrentIndex(photos.length - 1);
+      setAnimationDuration(defaultAnimationDuration * (photos.length / 5) * 2);
+    } else {
+      setAnimationDuration(defaultAnimationDuration);
+      setCurrentIndex(currentIndex - 1);
+    }
+  }, [currentIndex, defaultAnimationDuration, photos.length]);
+
+  const handleThumbClick = (index: number) => {
+    if (play) stopAutoPlayTemp();
+    setCurrentIndex(index);
+  };
+
+  const handleSwitchClickLeft = () => {
+    if (play) stopAutoPlayTemp();
+    scrollLeft();
+  };
+
   const handleSwitchClickRight = () => {
-    stopAutoPlayTemp();
+    if (play) stopAutoPlayTemp();
     scrollRight();
   };
 
-  const handleInfiniteScrollLeft = () => {};
+  const handleInfiniteSwitchClickLeft = () => {};
+
+  const handleInfiniteSwitchClickRight = () => {};
 
   useEffect(() => {
     if (!play) return;
