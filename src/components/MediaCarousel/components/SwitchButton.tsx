@@ -8,6 +8,7 @@ type SwitchButtonProps = {
 
 const StyledSwitchButton = styled.div`
   position: absolute;
+  z-index: 2;
   top: 0;
   bottom: 0;
   width: 10%;

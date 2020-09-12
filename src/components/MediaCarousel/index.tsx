@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import styled from "styled-components";
 import { Photo } from "./types";
 import PhotoThumb from "./components/PhotoThumb";
@@ -17,9 +23,12 @@ type MediaCarouselProps = {
   options: {
     autoPlay?: boolean;
     autoPlayInterval?: number;
+    infiniteScroll?: boolean;
+    showSwitch?: boolean;
     showThumbs?: boolean;
     thumbStyle?: "photo" | "point";
     defaultPhotoIndex?: number;
+    defaultAnimationDuration?: number;
   };
   onChange?: (currPhotoIndex: number) => void;
 };
@@ -27,9 +36,12 @@ type MediaCarouselProps = {
 type DefaultOptions = {
   autoPlay: boolean;
   autoPlayInterval: number;
+  infiniteScroll: boolean;
+  showSwitch: boolean;
   showThumbs: boolean;
   thumbStyle: "photo" | "point";
   defaultPhotoIndex: number;
+  defaultAnimationDuration: number;
 };
 
 const defaultPhotos = [
@@ -41,26 +53,32 @@ const defaultPhotos = [
 ];
 
 const defaultOptions: DefaultOptions = {
-  autoPlay: false,
+  autoPlay: true,
   autoPlayInterval: 3000,
+  infiniteScroll: false,
+  showSwitch: true,
   showThumbs: true,
-  thumbStyle: "photo",
+  thumbStyle: "point",
   defaultPhotoIndex: 0,
+  defaultAnimationDuration: 0.3,
 };
 
 const StyledCarouselWrapper = styled.div`
   height: 100%;
   width: 100%;
-  background-color: red;
   overflow: hidden;
 `;
 
 const CarouselBody = styled.div`
   position: relative;
-  display: flex;
 `;
 
-const CarouselFooter = styled.div<Pick<MediaCarouselProps, "options">>``;
+const CarouselFooter = styled.div<Pick<MediaCarouselProps, "options">>`
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const MediaCarousel = ({
   photos: carouselPhotos = defaultPhotos,
@@ -70,21 +88,27 @@ const MediaCarousel = ({
   const {
     autoPlay = defaultOptions.autoPlay,
     autoPlayInterval = defaultOptions.autoPlayInterval,
-    showThumbs: withThumbs = defaultOptions.showThumbs,
+    infiniteScroll = defaultOptions.infiniteScroll,
+    showSwitch = defaultOptions.showSwitch,
+    showThumbs = defaultOptions.showThumbs,
     thumbStyle = defaultOptions.thumbStyle,
     defaultPhotoIndex = defaultOptions.defaultPhotoIndex,
+    defaultAnimationDuration = defaultOptions.defaultAnimationDuration,
   } = options;
   const [photos, setPhotos] = useState(carouselPhotos);
   const [currentIndex, setCurrentIndex] = useState(defaultPhotoIndex);
   const [play, setPlay] = useState(autoPlay);
-  const [interval, setInterval] = useState(autoPlayInterval);
-  const [showThumbs, setShowThumbs] = useState(withThumbs);
   const [thumbType, setThumbType] = useState(thumbStyle);
 
-  const [xOffset, setXOffset] = useState<number | null>(null);
+  const [xOffset, setXOffset] = useState<number | null>(0);
   const [bodyHeight, setBodyHeight] = useState<number | null>(null);
+  const [animationDuration, setAnimationDuration] = useState(
+    defaultAnimationDuration
+  );
   const carouselRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<any>(null);
+  const timeoutRef = useRef<any>(null);
 
   useEffect(() => {
     if (!carouselRef.current) return;
@@ -97,44 +121,77 @@ const MediaCarousel = ({
     } else {
       setBodyHeight(carouselRef.current.getBoundingClientRect().height);
     }
+  }, [carouselRef, footerRef, showThumbs]);
 
-    if (currentIndex === 0 || currentIndex === photos.length - 1) {
-      setPhotos([...photos, ...photos]);
-    }
-
+  useEffect(() => {
+    if (!carouselRef.current) return;
     setXOffset(
-      carouselRef.current.getBoundingClientRect().width * currentIndex
+      -currentIndex * carouselRef.current.getBoundingClientRect().width
     );
-  }, [carouselRef, footerRef]);
+  }, [currentIndex, carouselRef]);
 
-  const handleThumbClick = (index: number) => {};
+  const stopAutoPlayTemp = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    if (intervalRef.current && autoPlay) {
+      clearInterval(intervalRef.current);
+      setPlay(false);
+      timeoutRef.current = setTimeout(() => {
+        setPlay(true);
+      }, 5000);
+    }
+  };
+
+  const handleThumbClick = (index: number) => {
+    stopAutoPlayTemp();
+    setCurrentIndex(index);
+  };
+
+  const scrollLeft = useCallback(() => {
+    if (currentIndex === 0) {
+      setCurrentIndex(photos.length - 1);
+      setAnimationDuration(defaultAnimationDuration * (photos.length / 5) * 2);
+    } else {
+      setAnimationDuration(defaultAnimationDuration);
+      setCurrentIndex(currentIndex - 1);
+    }
+  }, [currentIndex, defaultAnimationDuration, photos.length]);
 
   const handleSwitchClickLeft = () => {
-    console.log(currentIndex, photos.length);
-    if (currentIndex === 0) {
-      setCurrentIndex(Math.floor(photos.length / 2) - 1);
-      return;
-    } else if (currentIndex === 1) {
-      setPhotos([...photos, ...photos]);
-    } else if (currentIndex === photos.length - 2) {
-      setPhotos(photos.splice(0, Math.floor(photos.length / 2)));
-      setCurrentIndex(photos.length - 3);
-    }
-    setCurrentIndex(currentIndex - 1);
+    stopAutoPlayTemp();
+    scrollLeft();
   };
 
-  const handleSwitchClickRight = () => {
+  const scrollRight = useCallback(() => {
     if (currentIndex === photos.length - 1) {
-      setCurrentIndex(Math.floor(photos.length / 2) + 1);
-      return;
-    } else if (currentIndex === photos.length - 2) {
-      setPhotos([...photos, ...photos]);
-    } else if (currentIndex === 0) {
-      setPhotos(photos.splice(0, Math.floor(photos.length / 2)));
-      setCurrentIndex(1);
+      setCurrentIndex(0);
+      setAnimationDuration(defaultAnimationDuration * (photos.length / 5) * 2);
+    } else {
+      setAnimationDuration(defaultAnimationDuration);
+      setCurrentIndex(currentIndex + 1);
     }
-    setCurrentIndex(currentIndex + 1);
+  }, [currentIndex, defaultAnimationDuration, photos.length]);
+
+  const handleSwitchClickRight = () => {
+    stopAutoPlayTemp();
+    scrollRight();
   };
+
+  const handleInfiniteScrollLeft = () => {};
+
+  useEffect(() => {
+    if (!play) return;
+
+    intervalRef.current = setInterval(() => {
+      setTimeout(() => {
+        scrollRight();
+      }, animationDuration * 100);
+    }, autoPlayInterval);
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [animationDuration, autoPlayInterval, play, scrollRight]);
 
   const footerElements = (() => {
     if (!showThumbs || !thumbStyle) return null;
@@ -174,19 +231,33 @@ const MediaCarousel = ({
   return (
     <StyledCarouselWrapper ref={carouselRef}>
       {!!(xOffset !== null && bodyHeight) && (
-        <CarouselBody
-          style={{ height: bodyHeight, transform: `translateX(${xOffset})` }}
-        >
-          <LeftButton onClick={handleSwitchClickLeft} />
-          <RightButton onClick={handleSwitchClickRight} />
-          {photos.map((p, i) => (
-            <CarouselPhoto key={i} photo={p} />
-          ))}
+        <CarouselBody style={{ height: bodyHeight }}>
+          {showSwitch && (
+            <>
+              <LeftButton onClick={handleSwitchClickLeft} />
+              <RightButton onClick={handleSwitchClickRight} />
+            </>
+          )}
+
+          <div
+            style={{
+              height: "100%",
+              display: "flex",
+              transform: `translateX(${xOffset}px)`,
+              transition: `transform ${animationDuration}s ease`,
+            }}
+          >
+            {photos.map((p, i) => (
+              <CarouselPhoto key={i} photo={p} />
+            ))}
+          </div>
         </CarouselBody>
       )}
-      {/* {showThumbs && (
-        <CarouselFooter options={options} ref={footerRef}>{footerElements}</CarouselFooter>
-      )} */}
+      {showThumbs && (
+        <CarouselFooter options={options} ref={footerRef}>
+          {footerElements}
+        </CarouselFooter>
+      )}
     </StyledCarouselWrapper>
   );
 };
