@@ -27,7 +27,7 @@ const StyledPhotoThumb = styled.div<Pick<PhotoThumbProps, "isActive">>`
   }}
 
   &:hover {
-    filter: opacity(1);
+    filter: ${({ isActive }) => (isActive ? "opacity(1)" : "opacity(0.8)")};
   }
 
   & > img {

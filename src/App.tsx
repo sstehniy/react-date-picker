@@ -31,7 +31,7 @@ const App = (): JSX.Element => {
 
 const CarouselWrapper = () => {
   return (
-    <div style={{ height: 400, width: 650 }}>
+    <div style={{ height: 500, width: 750 }}>
       <MediaCarousel options={{}} />
     </div>
   );

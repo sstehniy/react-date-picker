@@ -1,11 +1,5 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
-import styled from "styled-components";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import styled, { css } from "styled-components";
 import { Photo } from "./types";
 import PhotoThumb from "./components/PhotoThumb";
 import PointThumb from "./components/PointThumb";
@@ -50,89 +44,54 @@ const defaultPhotos = [
   { src: space_3, alt: "space-3" },
   { src: space_4, alt: "space-4" },
   { src: space_5, alt: "space-5" },
+  { src: space_1, alt: "space-1" },
 ];
 
 const defaultOptions: DefaultOptions = {
-  autoPlay: false,
+  autoPlay: true,
   autoPlayInterval: 3000,
   infiniteScroll: false,
   showSwitch: true,
   showThumbs: true,
   thumbStyle: "point",
   defaultPhotoIndex: 0,
-  defaultAnimationDuration: 0.3,
+  defaultAnimationDuration: 0.5,
 };
 
 const StyledCarouselWrapper = styled.div`
   height: 100%;
   width: 100%;
-  overflow: hidden;
   user-select: none;
 `;
 
 const CarouselBody = styled.div`
   position: relative;
   user-select: none;
+  border-radius: 12px;
+  overflow: hidden;
+`;
 
-  .from-left {
-    animation: fromLeft 0.3s frowards ease-in;
-
-    @keyframes fromLeft {
-      0% {
-        transform: translateX(-650px);
-      }
-      100% {
-        transform: translateX(0);
-      }
-    }
-  }
-
-  .to-left {
-    animation: toLeft 0.3s forwards ease-in;
-
-    @keyframes toLeft {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-650);
-      }
-    }
-  }
-
-  .from-right {
-    animation: fromRight 0.3s forwards ease-in;
-
-    @keyframes fromRight {
-      0% {
-        transform: translateX(650px);
-      }
-      100% {
-        transform: translateX(0);
-      }
-    }
-  }
-
-  .to-right {
-    animation: toRight 0.3s forwards ease-in;
-
-    @keyframes toRight {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(650px);
-      }
-    }
-  }
+const PhotosWrapper = styled.div<{ offset: number; animationDuration: number }>`
+  height: 100%;
+  display: flex;
+  transform: translateX(${({ offset }) => offset}px);
+  transition: transform ${({ animationDuration }) => animationDuration}s
+    ease-in-out;
 `;
 
 const CarouselFooter = styled.div<Pick<MediaCarouselProps, "options">>`
-  padding: 5px;
+  width: 80%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  margin-top: 10px;
+  padding: 12px 3%;
+  border-radius: 7px;
   display: flex;
   justify-content: center;
   align-items: center;
   user-select: none;
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: ${({ theme: { shadow } }) => shadow.button_md};
 `;
 
 const MediaCarousel = ({
@@ -172,7 +131,8 @@ const MediaCarousel = ({
     if (showThumbs && footerRef.current) {
       setBodyHeight(
         containerRef.current.getBoundingClientRect().height -
-          footerRef.current.getBoundingClientRect().height
+          footerRef.current.getBoundingClientRect().height -
+          10
       );
     } else {
       setBodyHeight(containerRef.current.getBoundingClientRect().height);
@@ -328,19 +288,15 @@ const MediaCarousel = ({
             </>
           )}
 
-          <div
-            style={{
-              height: "100%",
-              display: "flex",
-              transform: `translateX(${xOffset}px)`,
-              transition: `transform ${animationDuration}s ease`,
-            }}
+          <PhotosWrapper
+            offset={xOffset}
+            animationDuration={animationDuration}
             ref={carouselRef}
           >
             {photos.map((p, i) => (
               <CarouselPhoto key={i} photo={p} index={i} />
             ))}
-          </div>
+          </PhotosWrapper>
         </CarouselBody>
       )}
       {showThumbs && (

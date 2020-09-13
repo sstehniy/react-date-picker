@@ -9,8 +9,9 @@ type PointThumbProps = {
 const StyledPointThumb = styled.div<Pick<PointThumbProps, "isActive">>`
   height: 10px;
   width: 15%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
   margin: 0 5px;
+  border-radius: 5px;
   transition: background-color 0.3s ease;
   cursor: pointer;
 
@@ -20,7 +21,8 @@ const StyledPointThumb = styled.div<Pick<PointThumbProps, "isActive">>`
       background-color: rgba(0, 0, 0, 0.9);
     `}
   &:hover {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: ${({ isActive }) =>
+      isActive ? "rgba(0, 0, 0, 0.9)" : "rgba(0, 0, 0, 0.6)"};
   }
 `;
 

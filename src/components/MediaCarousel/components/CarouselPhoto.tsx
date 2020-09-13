@@ -21,7 +21,7 @@ const StyledCarouselPhoto = styled.div`
 const CarouselPhoto = ({ photo: { src, alt }, index }: CarouselPhotoProps) => {
   return (
     <StyledCarouselPhoto id={index + ""}>
-      <img src={src} alt={`${alt}_thumbnail`} />
+      <img src={src} alt={`${alt}_thumbnail`} loading="lazy" />
     </StyledCarouselPhoto>
   );
 };

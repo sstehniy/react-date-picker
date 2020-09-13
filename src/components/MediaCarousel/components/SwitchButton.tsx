@@ -11,7 +11,7 @@ const StyledSwitchButton = styled.div`
   z-index: 2;
   top: 0;
   bottom: 0;
-  width: 10%;
+  width: 8%;
   min-width: 15px;
   display: flex;
   align-items: center;
