@@ -67,10 +67,64 @@ const StyledCarouselWrapper = styled.div`
   height: 100%;
   width: 100%;
   overflow: hidden;
+  user-select: none;
 `;
 
 const CarouselBody = styled.div`
   position: relative;
+  user-select: none;
+
+  .from-left {
+    animation: fromLeft 0.3s frowards ease-in;
+
+    @keyframes fromLeft {
+      0% {
+        transform: translateX(-650px);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  .to-left {
+    animation: toLeft 0.3s forwards ease-in;
+
+    @keyframes toLeft {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-650);
+      }
+    }
+  }
+
+  .from-right {
+    animation: fromRight 0.3s forwards ease-in;
+
+    @keyframes fromRight {
+      0% {
+        transform: translateX(650px);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  .to-right {
+    animation: toRight 0.3s forwards ease-in;
+
+    @keyframes toRight {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(650px);
+      }
+    }
+  }
 `;
 
 const CarouselFooter = styled.div<Pick<MediaCarouselProps, "options">>`
@@ -78,6 +132,7 @@ const CarouselFooter = styled.div<Pick<MediaCarouselProps, "options">>`
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 `;
 
 const MediaCarousel = ({
@@ -105,30 +160,31 @@ const MediaCarousel = ({
   const [animationDuration, setAnimationDuration] = useState(
     defaultAnimationDuration
   );
+  const containerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<any>(null);
   const timeoutRef = useRef<any>(null);
 
   useEffect(() => {
-    if (!carouselRef.current) return;
+    if (!containerRef.current) return;
 
     if (showThumbs && footerRef.current) {
       setBodyHeight(
-        carouselRef.current.getBoundingClientRect().height -
+        containerRef.current.getBoundingClientRect().height -
           footerRef.current.getBoundingClientRect().height
       );
     } else {
-      setBodyHeight(carouselRef.current.getBoundingClientRect().height);
+      setBodyHeight(containerRef.current.getBoundingClientRect().height);
     }
-  }, [carouselRef, footerRef, showThumbs]);
+  }, [containerRef, footerRef, showThumbs]);
 
   useEffect(() => {
-    if (!carouselRef.current) return;
+    if (!containerRef.current || infiniteScroll) return;
     setXOffset(
-      -currentIndex * carouselRef.current.getBoundingClientRect().width
+      -currentIndex * containerRef.current.getBoundingClientRect().width
     );
-  }, [currentIndex, carouselRef]);
+  }, [currentIndex, containerRef, infiniteScroll]);
 
   const stopAutoPlayTemp = useCallback(() => {
     if (timeoutRef.current) {
@@ -178,9 +234,28 @@ const MediaCarousel = ({
     scrollRight();
   };
 
-  const handleInfiniteSwitchClickLeft = () => {};
+  const handleInfiniteSwitchClickLeft = () => {
+    if (!containerRef.current || !carouselRef.current) return;
+    const node = carouselRef.current;
+    if (!node.lastChild) return;
+    const oldChild = node.lastChild.cloneNode(true);
+    if (!oldChild) return;
+    node.children[0].classList.toggle("to-right");
 
-  const handleInfiniteSwitchClickRight = () => {};
+    const newNode = node.insertBefore(oldChild, node.firstChild);
+
+    node.removeChild(node.lastChild);
+  };
+
+  const handleInfiniteSwitchClickRight = () => {
+    if (!containerRef.current || !carouselRef.current) return;
+    const node = carouselRef.current;
+    if (!node.firstChild) return;
+    const oldChild = node.firstChild.cloneNode(true);
+    if (!oldChild) return;
+    node.appendChild(oldChild);
+    node.removeChild(node.firstChild);
+  };
 
   useEffect(() => {
     if (!play) return;
@@ -231,13 +306,25 @@ const MediaCarousel = ({
   })();
 
   return (
-    <StyledCarouselWrapper ref={carouselRef}>
+    <StyledCarouselWrapper ref={containerRef}>
       {!!(xOffset !== null && bodyHeight) && (
         <CarouselBody style={{ height: bodyHeight }}>
           {showSwitch && (
             <>
-              <LeftButton onClick={handleSwitchClickLeft} />
-              <RightButton onClick={handleSwitchClickRight} />
+              <LeftButton
+                onClick={
+                  infiniteScroll
+                    ? handleInfiniteSwitchClickLeft
+                    : handleSwitchClickLeft
+                }
+              />
+              <RightButton
+                onClick={
+                  infiniteScroll
+                    ? handleInfiniteSwitchClickRight
+                    : handleSwitchClickRight
+                }
+              />
             </>
           )}
 
@@ -248,9 +335,10 @@ const MediaCarousel = ({
               transform: `translateX(${xOffset}px)`,
               transition: `transform ${animationDuration}s ease`,
             }}
+            ref={carouselRef}
           >
             {photos.map((p, i) => (
-              <CarouselPhoto key={i} photo={p} />
+              <CarouselPhoto key={i} photo={p} index={i} />
             ))}
           </div>
         </CarouselBody>

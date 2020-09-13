@@ -4,6 +4,7 @@ import { Photo } from "../types";
 
 type CarouselPhotoProps = {
   photo: Photo;
+  index: number;
 };
 
 const StyledCarouselPhoto = styled.div`
@@ -17,9 +18,9 @@ const StyledCarouselPhoto = styled.div`
   }
 `;
 
-const CarouselPhoto = ({ photo: { src, alt } }: CarouselPhotoProps) => {
+const CarouselPhoto = ({ photo: { src, alt }, index }: CarouselPhotoProps) => {
   return (
-    <StyledCarouselPhoto>
+    <StyledCarouselPhoto id={index + ""}>
       <img src={src} alt={`${alt}_thumbnail`} />
     </StyledCarouselPhoto>
   );
