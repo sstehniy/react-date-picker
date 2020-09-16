@@ -6,7 +6,7 @@ import MediaCarousel from "./components/MediaCarousel";
 
 const StyledApp = styled.div`
   min-height: 100vh;
-  background-color: #c8e1f9;
+  background-color: #fafafa;
   display: flex;
   flex-direction: column;
   align-items: center;

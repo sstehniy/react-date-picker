@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, CSSProperties } from "styled-components";
 import { Photo } from "./types";
 import PhotoThumb from "./components/PhotoThumb";
 import PointThumb from "./components/PointThumb";
@@ -25,6 +25,8 @@ type MediaCarouselProps = {
     defaultAnimationDuration?: number;
   };
   onChange?: (currPhotoIndex: number) => void;
+  style?: CSSProperties;
+  className?: string;
 };
 
 type DefaultOptions = {
@@ -38,13 +40,18 @@ type DefaultOptions = {
   defaultAnimationDuration: number;
 };
 
-const defaultPhotos = [
-  { src: space_1, alt: "space-1" },
+const defaultPhotos: Photo[] = [
+  {
+    src: space_1,
+    alt: "space-1",
+  },
   { src: space_2, alt: "space-2" },
   { src: space_3, alt: "space-3" },
   { src: space_4, alt: "space-4" },
   { src: space_5, alt: "space-5" },
   { src: space_1, alt: "space-1" },
+  { src: space_2, alt: "space-2" },
+  { src: space_3, alt: "space-3" },
 ];
 
 const defaultOptions: DefaultOptions = {
@@ -59,15 +66,49 @@ const defaultOptions: DefaultOptions = {
 };
 
 const StyledCarouselWrapper = styled.div`
+  position: relative;
   height: 100%;
   width: 100%;
   user-select: none;
+
+  /* &.clicked {
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      scale: 0.3;
+      opacity: 0.1;
+      background-color: white;
+      animation: flash 0.5s forwards ease;
+    }
+
+    @keyframes flash {
+      0% {
+        scale: 0.3;
+        opacity: 0.1;
+        z-index: 0;
+      }
+      50% {
+        scale: 1;
+        opacity: 0.5;
+      }
+      99% {
+        opacity: 0;
+      }
+      100% {
+        z-index: -1;
+      }
+    }
+  } */
 `;
 
 const CarouselBody = styled.div`
   position: relative;
   user-select: none;
-  border-radius: 12px;
+  border-radius: 7px;
   overflow: hidden;
 `;
 
@@ -95,9 +136,11 @@ const CarouselFooter = styled.div<Pick<MediaCarouselProps, "options">>`
 `;
 
 const MediaCarousel = ({
-  photos: carouselPhotos = defaultPhotos,
+  photos = defaultPhotos,
   options,
   onChange = (currPhotoIndex: number) => {},
+  style = {},
+  className = "",
 }: MediaCarouselProps) => {
   const {
     autoPlay = defaultOptions.autoPlay,
@@ -109,11 +152,8 @@ const MediaCarousel = ({
     defaultPhotoIndex = defaultOptions.defaultPhotoIndex,
     defaultAnimationDuration = defaultOptions.defaultAnimationDuration,
   } = options;
-  const [photos, setPhotos] = useState(carouselPhotos);
   const [currentIndex, setCurrentIndex] = useState(defaultPhotoIndex);
   const [play, setPlay] = useState(autoPlay);
-  const [thumbType, setThumbType] = useState(thumbStyle);
-
   const [xOffset, setXOffset] = useState<number | null>(0);
   const [bodyHeight, setBodyHeight] = useState<number | null>(null);
   const [animationDuration, setAnimationDuration] = useState(
@@ -155,7 +195,7 @@ const MediaCarousel = ({
       setPlay(false);
       timeoutRef.current = setTimeout(() => {
         setPlay(true);
-      }, 5000);
+      }, 3000);
     }
   }, [play]);
 
@@ -192,6 +232,19 @@ const MediaCarousel = ({
   const handleSwitchClickRight = () => {
     if (play) stopAutoPlayTemp();
     scrollRight();
+  };
+
+  const handlePhotoClick = () => {
+    if (containerRef.current) {
+      containerRef.current.classList.remove("clicked");
+      setImmediate(() => {
+        if (containerRef.current) containerRef.current.classList.add("clicked");
+      });
+    }
+    clearInterval(intervalRef.current);
+    clearTimeout(timeoutRef.current);
+
+    setPlay(!play);
   };
 
   const handleInfiniteSwitchClickLeft = () => {
@@ -266,9 +319,9 @@ const MediaCarousel = ({
   })();
 
   return (
-    <StyledCarouselWrapper ref={containerRef}>
+    <StyledCarouselWrapper ref={containerRef} className={className}>
       {!!(xOffset !== null && bodyHeight) && (
-        <CarouselBody style={{ height: bodyHeight }}>
+        <CarouselBody style={{ ...style, height: bodyHeight }}>
           {showSwitch && (
             <>
               <LeftButton
@@ -292,6 +345,7 @@ const MediaCarousel = ({
             offset={xOffset}
             animationDuration={animationDuration}
             ref={carouselRef}
+            onClick={handlePhotoClick}
           >
             {photos.map((p, i) => (
               <CarouselPhoto key={i} photo={p} index={i} />
